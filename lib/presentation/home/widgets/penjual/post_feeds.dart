@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:propedia/presentation/home/cubit/property_cubit.dart';
+import 'package:propedia/presentation/home/cubit/property_state.dart';
 import 'package:propedia/presentation/home/pages/content/content_page.dart';
 
 class PostFeed extends StatelessWidget {
@@ -8,7 +11,6 @@ class PostFeed extends StatelessWidget {
   final String description;
   final double price;
   final String location;
-  final String imageUrl;
 
   const PostFeed({
     Key? key,
@@ -16,7 +18,6 @@ class PostFeed extends StatelessWidget {
     required this.description,
     required this.price,
     required this.location,
-    required this.imageUrl,
   }) : super(key: key);
 
   String _formatCurrency(double amount) {
@@ -32,10 +33,7 @@ class PostFeed extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ContentPage()),
-        );
+        Navigator.push(context, MaterialPageRoute(builder: (_) => ContentPage()));
       },
       child: Container(
         width: 280.w,
@@ -58,34 +56,11 @@ class PostFeed extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10.r),
-              child: Image.network(
-                imageUrl,
-                height: 150.h,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 150.h,
-                    color: Colors.grey[300],
-                    child: Center(
-                      child: Icon(
-                        Icons.broken_image,
-                        size: 50.w,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  );
-                },
-              ),
             ),
             SizedBox(height: 10.h),
             Text(
               title,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black87),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -110,11 +85,7 @@ class PostFeed extends StatelessWidget {
             SizedBox(height: 5.h),
             Row(
               children: [
-                Icon(
-                  Icons.location_on_outlined,
-                  size: 14.sp,
-                  color: Colors.grey[600],
-                ),
+                Icon(Icons.location_on_outlined, size: 14.sp, color: Colors.grey[600]),
                 SizedBox(width: 4.w),
                 Expanded(
                   child: Text(
@@ -136,92 +107,52 @@ class PostFeed extends StatelessWidget {
 class PostCardFeeds extends StatelessWidget {
   const PostCardFeeds({super.key});
 
-  final List<Map<String, dynamic>> _postData = const [
-    {
-      'title': 'Promo Spesial: Sepatu Sneakers Nyaman!',
-      'description':
-          'Sepatu sneakers terbaru dengan desain modern dan kenyamanan maksimal. Cocok untuk aktivitas sehari-hari dan olahraga ringan.',
-      'price': 450000.0,
-      'location': 'Bandung',
-      'imageUrl':
-          'https://via.placeholder.com/600x400/FF5733/FFFFFF?text=Sneakers',
-    },
-    {
-      'title': 'Jasa Desain Grafis Profesional',
-      'description':
-          'Menerima pesanan desain logo, brosur, banner, dan kebutuhan visual lainnya. Hasil cepat dan berkualitas tinggi.',
-      'price': 1500000.0,
-      'location': 'Jakarta',
-      'imageUrl':
-          'https://via.placeholder.com/600x400/33FF57/FFFFFF?text=Desain+Grafis',
-    },
-    {
-      'title': 'Diskon Pakaian Musim Panas!',
-      'description':
-          'Koleksi pakaian musim panas terbaru dengan diskon menarik. Bahan adem dan nyaman untuk gaya santai Anda.',
-      'price': 120000.0,
-      'location': 'Surabaya',
-      'imageUrl':
-          'https://via.placeholder.co/600x400/3366FF/FFFFFF?text=Pakaian',
-    },
-    {
-      'title': 'Kursus Online: Pemrograman Flutter dari Nol',
-      'description':
-          'Pelajari dasar-dasar Flutter dan bangun aplikasi mobile pertama Anda. Cocok untuk pemula tanpa pengalaman coding.',
-      'price': 2500000.0,
-      'location': 'Online',
-      'imageUrl':
-          'https://via.placeholder.co/600x400/FFC300/000000?text=Flutter',
-    },
-    {
-      'title': 'Resep Makanan Sehat: Salad Buah Tropis',
-      'description':
-          'Resep salad buah tropis yang segar dan menyehatkan. Mudah dibuat dan cocok untuk camilan atau sarapan.',
-      'price': 35000.0,
-      'location': 'Yogyakarta',
-      'imageUrl':
-          'https://via.placeholder.co/600x400/00CED1/FFFFFF?text=Salad+Buah',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-          child: Text(
-            'Postingan kamu',
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 360.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: _postData.length,
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
-            itemBuilder: (context, index) {
-              final data = _postData[index];
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: PostFeed(
-                  title: data['title']!,
-                  description: data['description']!,
-                  price: data['price']!,
-                  location: data['location']!,
-                  imageUrl: data['imageUrl']!,
+    return BlocBuilder<PropertyCubit, PropertyState>(
+      builder: (context, state) {
+        final properties = context.read<PropertyCubit>().userPostedProperties;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              child: Text(
+                'Postingan kamu',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
                 ),
-              );
-            },
-          ),
-        ),
-      ],
+              ),
+            ),
+            SizedBox(
+              height: 360.h,
+              child: properties.isEmpty
+                  ? Center(child: Text("Belum ada data", style: TextStyle(fontSize: 14.sp)))
+                  : ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: properties.length,
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      itemBuilder: (context, index) {
+                        final p = properties[index];
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          child: PostFeed(
+  title: p.namaRumah ?? 'Tanpa Judul',
+  description: p.deskripsi ?? 'Tidak ada deskripsi',
+  price: (p.harga ?? 0).toDouble(),
+  location: p.lokasi ?? 'Lokasi tidak diketahui',
+),
+
+                        );
+                      },
+                    ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

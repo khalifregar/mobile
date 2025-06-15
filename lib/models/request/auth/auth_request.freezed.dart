@@ -21,10 +21,8 @@ RegisterRequest _$RegisterRequestFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$RegisterRequest {
   String get username => throw _privateConstructorUsedError;
-  String? get email =>
-      throw _privateConstructorUsedError; // opsional sesuai backend
-  String? get phone =>
-      throw _privateConstructorUsedError; // opsional sesuai backend
+  String? get email => throw _privateConstructorUsedError;
+  String? get phone => throw _privateConstructorUsedError;
   String? get password => throw _privateConstructorUsedError;
 
   /// Serializes this RegisterRequest to a JSON map.
@@ -150,10 +148,8 @@ class _$RegisterRequestImpl implements _RegisterRequest {
   final String username;
   @override
   final String? email;
-// opsional sesuai backend
   @override
   final String? phone;
-// opsional sesuai backend
   @override
   final String? password;
 
@@ -210,9 +206,9 @@ abstract class _RegisterRequest implements RegisterRequest {
   @override
   String get username;
   @override
-  String? get email; // opsional sesuai backend
+  String? get email;
   @override
-  String? get phone; // opsional sesuai backend
+  String? get phone;
   @override
   String? get password;
 
@@ -230,8 +226,7 @@ LoginRequest _$LoginRequestFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$LoginRequest {
-  String get identifier =>
-      throw _privateConstructorUsedError; // bisa username / email / phone
+  String get identifier => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
 
   /// Serializes this LoginRequest to a JSON map.
@@ -334,7 +329,6 @@ class _$LoginRequestImpl implements _LoginRequest {
 
   @override
   final String identifier;
-// bisa username / email / phone
   @override
   final String password;
 
@@ -383,7 +377,7 @@ abstract class _LoginRequest implements LoginRequest {
       _$LoginRequestImpl.fromJson;
 
   @override
-  String get identifier; // bisa username / email / phone
+  String get identifier;
   @override
   String get password;
 

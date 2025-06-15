@@ -24,7 +24,7 @@ class _PropertiesApiService implements PropertiesApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<PropertyDto> createProperty(
+  Future<CreatePropertyResponseDto> createProperty(
     String role,
     CreatePropertyRequest request,
     String token,
@@ -34,7 +34,7 @@ class _PropertiesApiService implements PropertiesApiService {
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = request;
-    final _options = _setStreamType<PropertyDto>(Options(
+    final _options = _setStreamType<CreatePropertyResponseDto>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -51,9 +51,9 @@ class _PropertiesApiService implements PropertiesApiService {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late PropertyDto _value;
+    late CreatePropertyResponseDto _value;
     try {
-      _value = PropertyDto.fromJson(_result.data!);
+      _value = CreatePropertyResponseDto.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

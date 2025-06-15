@@ -28,8 +28,7 @@ mixin _$CreatePropertyRequest {
   @JsonKey(name: 'tipeRumah')
   String get tipeRumah => throw _privateConstructorUsedError;
   @JsonKey(name: 'harga')
-  int? get harga =>
-      throw _privateConstructorUsedError; // Bikin nullable buat jaga-jaga
+  int? get harga => throw _privateConstructorUsedError;
   @JsonKey(name: 'lokasi')
   String get lokasi => throw _privateConstructorUsedError;
 
@@ -191,7 +190,6 @@ class _$CreatePropertyRequestImpl implements _CreatePropertyRequest {
   @override
   @JsonKey(name: 'harga')
   final int? harga;
-// Bikin nullable buat jaga-jaga
   @override
   @JsonKey(name: 'lokasi')
   final String lokasi;
@@ -261,7 +259,7 @@ abstract class _CreatePropertyRequest implements CreatePropertyRequest {
   String get tipeRumah;
   @override
   @JsonKey(name: 'harga')
-  int? get harga; // Bikin nullable buat jaga-jaga
+  int? get harga;
   @override
   @JsonKey(name: 'lokasi')
   String get lokasi;
@@ -288,7 +286,7 @@ mixin _$UpdatePropertyRequest {
   @JsonKey(name: 'tipeRumah')
   String? get tipeRumah => throw _privateConstructorUsedError;
   @JsonKey(name: 'harga')
-  int? get harga => throw _privateConstructorUsedError; // Nullable juga
+  int? get harga => throw _privateConstructorUsedError;
   @JsonKey(name: 'lokasi')
   String? get lokasi => throw _privateConstructorUsedError;
   @JsonKey(name: 'isAvailable')
@@ -465,7 +463,6 @@ class _$UpdatePropertyRequestImpl implements _UpdatePropertyRequest {
   @override
   @JsonKey(name: 'harga')
   final int? harga;
-// Nullable juga
   @override
   @JsonKey(name: 'lokasi')
   final String? lokasi;
@@ -541,7 +538,7 @@ abstract class _UpdatePropertyRequest implements UpdatePropertyRequest {
   String? get tipeRumah;
   @override
   @JsonKey(name: 'harga')
-  int? get harga; // Nullable juga
+  int? get harga;
   @override
   @JsonKey(name: 'lokasi')
   String? get lokasi;

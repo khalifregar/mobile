@@ -11,12 +11,14 @@ abstract class PropertiesApiService {
   factory PropertiesApiService(Dio dio, {String baseUrl}) =
       _PropertiesApiService;
 
-  @POST('/api/{role}/properties')
-  Future<PropertyDto> createProperty(
-    @Path('role') String role,
-    @Body() CreatePropertyRequest request,
-    @Header('Authorization') String token,
-  );
+@POST('/api/{role}/properties')
+Future<CreatePropertyResponseDto> createProperty(
+  @Path('role') String role,
+  @Body() CreatePropertyRequest request,
+  @Header('Authorization') String token,
+);
+
+
 
   @GET('/api/property-types')
   Future<PropertyTypeResponseDto> getPropertyTypes(

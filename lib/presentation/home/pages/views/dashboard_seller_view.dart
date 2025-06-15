@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:propedia/presentation/auth/pages/profiles/profile_page.dart';
 import 'package:propedia/presentation/home/pages/chats/chat_pages.dart';
 import 'package:propedia/presentation/home/pages/logic/dashboard_logic.dart';
+import 'package:propedia/presentation/home/pages/seller/property_list.dart';
 import 'package:propedia/presentation/home/widgets/custom_bottom_navigation_bar.dart';
 import 'package:propedia/presentation/home/widgets/menu_section.dart';
 import 'package:propedia/presentation/home/pages/seller/post.dart';
@@ -198,7 +199,7 @@ class _DashboardPenjualViewState extends State<DashboardPenjualView> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const PostPenjualanPage(),
+                              builder: (context) => const PropertyListPage(),
                             ),
                           );
                         },
