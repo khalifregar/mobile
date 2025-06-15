@@ -25,12 +25,13 @@ class DashboardLogic {
     'assets/images/onboarding_1.jpeg',
   ];
 
-  final List<Map<String, dynamic>> _dummyHousesData = [
+  // 👉 Ini dibuat public
+  final List<Map<String, dynamic>> dummyHousesData = [
     {
       'imageUrl': 'assets/images/house_1.jpg',
       'title': 'Rumah Minimalis Modern',
       'description':
-          'Rumah nyaman di pusat kota Bandung dengan 3 kamar tidur, 2 kamar mandi, dan taman pribadi. Ideal untuk keluarga kecil. Berada di lingkungan yang tenang dan dekat dengan fasilitas umum.',
+          'Rumah nyaman di pusat kota Bandung dengan 3 kamar tidur, 2 kamar mandi, dan taman pribadi.',
       'tipeRumah': 'rumah',
       'harga': 1500000000.0,
       'lokasi': 'Bandung, Jawa Barat',
@@ -39,7 +40,7 @@ class DashboardLogic {
       'imageUrl': 'assets/images/house_2.jpg',
       'title': 'Apartemen Mewah Pusat Kota',
       'description':
-          'Apartemen studio modern dengan pemandangan kota Jakarta yang menakjubkan. Dilengkapi fasilitas lengkap seperti kolam renang, gym, dan keamanan 24 jam. Cocok untuk profesional muda.',
+          'Apartemen studio modern dengan pemandangan kota Jakarta yang menakjubkan.',
       'tipeRumah': 'apartemen',
       'harga': 2200000000.0,
       'lokasi': 'Jakarta, DKI Jakarta',
@@ -48,7 +49,7 @@ class DashboardLogic {
       'imageUrl': 'assets/images/house_3.jpg',
       'title': 'Villa dengan Pemandangan Danau',
       'description':
-          'Villa dua lantai yang luas dengan kolam renang pribadi dan pemandangan langsung ke danau di Bogor. Lingkungan asri dan cocok untuk liburan atau tempat tinggal jangka panjang.',
+          'Villa dua lantai yang luas dengan kolam renang pribadi dan pemandangan langsung ke danau.',
       'tipeRumah': 'villa',
       'harga': 3800000000.0,
       'lokasi': 'Bogor, Jawa Barat',
@@ -59,120 +60,42 @@ class DashboardLogic {
     {
       'icon': Icons.home_outlined,
       'title': 'Rumah',
-      'iconColor': Colors.blue.shade600,
+      'iconColor': Colors.blue,
       'backgroundColor': Colors.blue.shade50,
       'type': 'house',
     },
     {
       'icon': Icons.landscape_outlined,
       'title': 'Tanah',
-      'iconColor': Colors.green.shade600,
+      'iconColor': Colors.green,
       'backgroundColor': Colors.green.shade50,
       'type': 'land',
     },
     {
       'icon': Icons.restaurant_menu_outlined,
       'title': 'Kuliner',
-      'iconColor': Colors.orange.shade600,
+      'iconColor': Colors.orange,
       'backgroundColor': Colors.orange.shade50,
       'type': 'culinary',
     },
     {
       'icon': Icons.delivery_dining_outlined,
       'title': 'Pengiriman',
-      'iconColor': Colors.red.shade600,
+      'iconColor': Colors.red,
       'backgroundColor': Colors.red.shade50,
       'type': 'delivery',
     },
     {
       'icon': Icons.category_outlined,
       'title': 'Lainnya',
-      'iconColor': Colors.purple.shade600,
+      'iconColor': Colors.purple,
       'backgroundColor': Colors.purple.shade50,
       'type': 'other',
-    },
-    {
-      'icon': Icons.business_center_outlined,
-      'title': 'Properti',
-      'iconColor': Colors.teal.shade600,
-      'backgroundColor': Colors.teal.shade50,
-      'type': 'property',
-    },
-    {
-      'icon': Icons.medical_services_outlined,
-      'title': 'Kesehatan',
-      'iconColor': Colors.pink.shade600,
-      'backgroundColor': Colors.pink.shade50,
-      'type': 'health',
-    },
-    {
-      'icon': Icons.local_car_wash_outlined,
-      'title': 'Otomotif',
-      'iconColor': Colors.brown.shade600,
-      'backgroundColor': Colors.brown.shade50,
-      'type': 'automotive',
-    },
-    {
-      'icon': Icons.fastfood_outlined,
-      'title': 'Makanan',
-      'iconColor': Colors.amber.shade600,
-      'backgroundColor': Colors.amber.shade50,
-      'type': 'food',
-    },
-    {
-      'icon': Icons.shopping_cart_outlined,
-      'title': 'Belanja',
-      'iconColor': Colors.lightGreen.shade600,
-      'backgroundColor': Colors.lightGreen.shade50,
-      'type': 'shopping',
-    },
-    {
-      'icon': Icons.school_outlined,
-      'title': 'Edukasi',
-      'iconColor': Colors.cyan.shade600,
-      'backgroundColor': Colors.cyan.shade50,
-      'type': 'education',
-    },
-    {
-      'icon': Icons.fitness_center_outlined,
-      'title': 'Olahraga',
-      'iconColor': Colors.deepOrange.shade600,
-      'backgroundColor': Colors.deepOrange.shade50,
-      'type': 'sport',
     },
   ];
 
   int get selectedIndex => _selectedIndex;
   bool get isLoadingHomePage => _isLoadingHomePage;
-  Duration get countdownRemaining => _countdownRemaining;
-  String get flashSaleStatusText => _flashSaleStatusText;
-  List<Map<String, dynamic>> get nearbyHouses => _dummyHousesData;
-  List<Map<String, dynamic>> get flashSaleItems => [
-    {
-      'imageUrl': 'assets/images/flash_sale_house_1.jpg',
-      'name': 'Rumah Murah Cepat Laku',
-      'originalPrice': 1200000000.0,
-      'discountedPrice': 950000000.0,
-      'remainingStock': 5,
-      'progress': 0.6,
-    },
-    {
-      'imageUrl': 'assets/images/flash_sale_apartment_1.jpg',
-      'name': 'Apartemen Diskon Heboh',
-      'originalPrice': 1800000000.0,
-      'discountedPrice': 1400000000.0,
-      'remainingStock': 2,
-      'progress': 0.8,
-    },
-    {
-      'imageUrl': 'assets/images/flash_sale_land_1.jpg',
-      'name': 'Tanah Kavling Termurah',
-      'originalPrice': 700000000.0,
-      'discountedPrice': 550000000.0,
-      'remainingStock': 10,
-      'progress': 0.3,
-    },
-  ];
 
   void init() {
     _loadHomePageContent();
@@ -186,7 +109,7 @@ class DashboardLogic {
   void _loadHomePageContent() {
     _isLoadingHomePage = true;
     onUpdate();
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 2), () {
       _isLoadingHomePage = false;
       onUpdate();
     });
@@ -222,9 +145,6 @@ class DashboardLogic {
   }
 
   String formatDuration(Duration duration) {
-    if (duration.inSeconds <= 0) {
-      return '';
-    }
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     String hours = twoDigits(duration.inHours);
     String minutes = twoDigits(duration.inMinutes.remainder(60));
@@ -248,11 +168,6 @@ class DashboardLogic {
   }
 
   void onMenuItemTapped(BuildContext context, int index) {
-    final selectedMenuItem = allMenuItems[index];
-    if (selectedMenuItem['type'] == 'house') {
-    } else {
-      debugPrint('Tapped on ${selectedMenuItem['title']}');
-    }
     onUpdate();
   }
 
@@ -277,14 +192,10 @@ class DashboardLogic {
   String getCountdownDisplayText() {
     if (_flashSaleStatusText == 'Berakhir') {
       return 'Berakhir';
-    } else if (_flashSaleStatusText == 'Bersiap') {
-      return 'Dimulai ${formatDuration(_countdownRemaining)}';
     } else {
       return 'Dimulai ${formatDuration(_countdownRemaining)}';
     }
   }
 
-  Color getCountdownTextColor() {
-    return Colors.white;
-  }
+  Color getCountdownTextColor() => Colors.white;
 }

@@ -8,17 +8,14 @@ part 'properties_api_services.g.dart';
 
 @RestApi(baseUrl: ApiConstants.baseUrl)
 abstract class PropertiesApiService {
-  factory PropertiesApiService(Dio dio, {String baseUrl}) =
-      _PropertiesApiService;
+  factory PropertiesApiService(Dio dio, {String baseUrl}) = _PropertiesApiService;
 
-@POST('/api/{role}/properties')
-Future<CreatePropertyResponseDto> createProperty(
-  @Path('role') String role,
-  @Body() CreatePropertyRequest request,
-  @Header('Authorization') String token,
-);
-
-
+  @POST('/api/{role}/properties')
+  Future<CreatePropertyResponseDto> createProperty(
+    @Path('role') String role,
+    @Body() CreatePropertyRequest request,
+    @Header('Authorization') String token,
+  );
 
   @GET('/api/property-types')
   Future<PropertyTypeResponseDto> getPropertyTypes(
@@ -54,7 +51,9 @@ Future<CreatePropertyResponseDto> createProperty(
   );
 
   @GET('/api/pembeli/properties')
-  Future<List<PropertyDto>> getBuyerProperties();
+  Future<List<PropertyDto>> getBuyerProperties(
+    @Header('Authorization') String token, // ✅ Tambahan untuk token
+  );
 
   @GET('/api/pembeli/properties/property/{propertyId}')
   Future<PropertyDto> getBuyerPropertyDetail(

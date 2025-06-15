@@ -33,8 +33,7 @@ class _PropertiesApiService implements PropertiesApiService {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    _data.addAll(request.toJson());
+    final _data = request;
     final _options = _setStreamType<CreatePropertyResponseDto>(Options(
       method: 'POST',
       headers: _headers,
@@ -243,10 +242,11 @@ class _PropertiesApiService implements PropertiesApiService {
   }
 
   @override
-  Future<List<PropertyDto>> getBuyerProperties() async {
+  Future<List<PropertyDto>> getBuyerProperties(String token) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<List<PropertyDto>>(Options(
       method: 'GET',

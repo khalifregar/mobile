@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:propedia/models/dtos/stores/properties_dto.dart';
 import 'package:propedia/presentation/auth/pages/profiles/profile_page.dart';
+import 'package:propedia/presentation/home/cubit/property_cubit.dart';
+import 'package:propedia/presentation/home/cubit/property_state.dart';
 import 'package:propedia/presentation/home/pages/chats/chat_pages.dart';
 import 'package:propedia/presentation/home/pages/logic/dashboard_logic.dart';
 import 'package:propedia/presentation/home/widgets/custom_bottom_navigation_bar.dart';
-import 'package:propedia/presentation/home/widgets/menu_section.dart';
 import 'package:propedia/presentation/home/widgets/custom_search_bar.dart';
-import 'package:propedia/presentation/home/widgets/snack_item_card.dart';
-import 'package:propedia/presentation/home/widgets/banner_carousel.dart';
-import 'package:propedia/presentation/home/widgets/flash_sale_card.dart';
-import 'package:propedia/presentation/home/widgets/flash_sale_shimmer.dart';
-import 'package:propedia/presentation/home/widgets/snack_item_shimmer.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:propedia/presentation/home/widgets/house_card.dart';
+import 'package:propedia/presentation/home/widgets/menu_section.dart';
+import 'package:propedia/presentation/home/widgets/see_all.dart';
+import 'package:propedia/presentation/home/widgets/utils/location_helper.dart';
 
 class DashboardView extends StatefulWidget {
   final String userName;
@@ -37,18 +39,17 @@ class _DashboardViewState extends State<DashboardView> {
 
   bool _isRefreshingData = false;
 
+  @override
+  void initState() {
+    super.initState();
+    context.read<PropertyCubit>().fetchAllProperties(widget.userRole);
+  }
+
   Future<void> _handleRefresh() async {
-    debugPrint('Refreshing data (DashboardView)...');
-    setState(() {
-      _isRefreshingData = true;
-    });
-
-    await Future.delayed(const Duration(milliseconds: 1500));
-
-    setState(() {
-      _isRefreshingData = false;
-    });
-    debugPrint('Refresh complete (DashboardView)!');
+    setState(() => _isRefreshingData = true);
+    await context.read<PropertyCubit>().fetchAllProperties(widget.userRole);
+    await Future.delayed(const Duration(milliseconds: 500));
+    setState(() => _isRefreshingData = false);
   }
 
   @override
@@ -71,11 +72,8 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   Widget _buildHomePageContent(BuildContext context) {
-    final String defaultProfileImageUrl =
+    const String defaultProfileImageUrl =
         'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-
-    bool showShimmer =
-        _isRefreshingData || widget.dashboardLogic.isLoadingHomePage;
 
     return SafeArea(
       child: LiquidPullToRefresh(
@@ -102,37 +100,25 @@ class _DashboardViewState extends State<DashboardView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder:
-                                    (context) => ProfilePage(
-                                      userName: widget.userName,
-                                      userEmail: widget.userEmail,
-                                      userRole: widget.userRole,
-                                    ),
+                                builder: (context) => ProfilePage(
+                                  userName: widget.userName,
+                                  userEmail: widget.userEmail,
+                                  userRole: widget.userRole,
+                                ),
                               ),
                             );
                           },
                           child: CircleAvatar(
                             radius: 25.w,
-                            backgroundImage: NetworkImage(
-                              defaultProfileImageUrl,
-                            ),
-                            onBackgroundImageError: (exception, stackTrace) {
-                              debugPrint(
-                                'Error loading profile image: $exception',
-                              );
-                            },
-                            child:
-                                defaultProfileImageUrl.isEmpty
-                                    ? Icon(
-                                      Icons.person,
-                                      size: 25.w,
-                                      color: Colors.white,
-                                    )
-                                    : null,
-                            backgroundColor:
-                                defaultProfileImageUrl.isEmpty
-                                    ? Colors.grey[300]
-                                    : null,
+                            backgroundImage: NetworkImage(defaultProfileImageUrl),
+                            onBackgroundImageError: (_, __) =>
+                                debugPrint('Error loading profile image'),
+                            child: defaultProfileImageUrl.isEmpty
+                                ? Icon(Icons.person, size: 25.w, color: Colors.white)
+                                : null,
+                            backgroundColor: defaultProfileImageUrl.isEmpty
+                                ? Colors.grey[300]
+                                : null,
                           ),
                         ),
                         SizedBox(width: 10.w),
@@ -141,10 +127,7 @@ class _DashboardViewState extends State<DashboardView> {
                           children: [
                             Text(
                               widget.dashboardLogic.getGreeting(),
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.grey[700],
-                              ),
+                              style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
                             ),
                             Text(
                               widget.userName,
@@ -159,16 +142,13 @@ class _DashboardViewState extends State<DashboardView> {
                       ],
                     ),
                     IconButton(
-                      icon: Icon(
-                        Icons.notifications_none,
-                        size: 28.w,
-                        color: Colors.grey[700],
-                      ),
+                      icon: Icon(Icons.notifications_none, size: 28.w, color: Colors.grey[700]),
                       onPressed: () {},
                     ),
                   ],
                 ),
               ),
+
               SizedBox(height: 20.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -180,24 +160,17 @@ class _DashboardViewState extends State<DashboardView> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                          width: 1.w,
-                        ),
+                        border: Border.all(color: Colors.grey.shade300, width: 1.w),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.05),
-                            spreadRadius: 0,
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
                         ],
                       ),
                       child: IconButton(
-                        icon: Icon(
-                          Icons.menu_open,
-                          color: Colors.grey.shade600,
-                        ),
+                        icon: Icon(Icons.menu_open, color: Colors.grey.shade600),
                         onPressed: widget.dashboardLogic.navigateToFilterPage,
                         iconSize: 24.w,
                         padding: EdgeInsets.all(12.w),
@@ -207,93 +180,18 @@ class _DashboardViewState extends State<DashboardView> {
                   ],
                 ),
               ),
+
               SizedBox(height: 20.h),
-              showShimmer
-                  ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: const MenuSectionShimmer(),
-                  )
-                  : Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: MenuSection(
-                      allMenuItems: widget.dashboardLogic.allMenuItems,
-                      onItemTap: (index) {
-                        widget.dashboardLogic.onMenuItemTapped(context, index);
-                      },
-                    ),
-                  ),
-              SizedBox(height: 10.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildActionButton(
-                        Icons.directions_bike_outlined,
-                        'Ride to\nOffice',
-                      ),
-                    ),
-                    SizedBox(width: 15.w),
-                    Expanded(
-                      child: _buildActionButton(
-                        Icons.lightbulb_outline,
-                        'Discover\nNew Deals!',
-                      ),
-                    ),
-                  ],
+                child: MenuSection(
+                  allMenuItems: widget.dashboardLogic.allMenuItems,
+                  onItemTap: (index) {
+                    widget.dashboardLogic.onMenuItemTapped(context, index);
+                  },
                 ),
               ),
-              SizedBox(height: 15.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Text(
-                  'Rumah di Sekitarmu',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-              ),
-              SizedBox(height: 15.h),
-              SizedBox(
-                height: 220.h,
-                child:
-                    showShimmer
-                        ? ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: EdgeInsets.only(
-                                left: index == 0 ? 20.w : 0,
-                                right: 15.w,
-                              ),
-                              child: const SnackItemShimmer(),
-                            );
-                          },
-                        )
-                        : ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 5,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: EdgeInsets.only(
-                                left: index == 0 ? 20.w : 0,
-                                right: 15.w,
-                              ),
-                              child: SnackItemCard(
-                                productImageUrl:
-                                    'assets/images/product_image_${index + 1}.jpg',
-                                title: 'Nama Produk Super ${index + 1}',
-                                price: '${(index + 1) * 1500000}',
-                                location: 'Bandung, Jawa Barat',
-                                discountPercentage: index.isEven ? '15%' : null,
-                              ),
-                            );
-                          },
-                        ),
-              ),
+
               SizedBox(height: 20.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -301,29 +199,31 @@ class _DashboardViewState extends State<DashboardView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Flash Sale!',
+                      'Untuk Kamu',
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
-                        color: Colors.red.shade700,
+                        color: Colors.black87,
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 4.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            widget.dashboardLogic.getCountdownBackgroundColor(),
-                        borderRadius: BorderRadius.circular(5.r),
-                      ),
+                    GestureDetector(
+                      onTap: () async {
+                        final city = await LocationHelper.getCityFromLocation();
+                        if (context.mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => SeeAllPropertiesPage(lokasiUser: city ?? ''),
+                            ),
+                          );
+                        }
+                      },
                       child: Text(
-                        widget.dashboardLogic.getCountdownDisplayText(),
+                        'Lihat Semua',
                         style: TextStyle(
-                          color: widget.dashboardLogic.getCountdownTextColor(),
                           fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFFF6B00),
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -331,86 +231,49 @@ class _DashboardViewState extends State<DashboardView> {
                 ),
               ),
               SizedBox(height: 15.h),
-              SizedBox(
-                height: 200.h,
-                child:
-                    showShimmer
-                        ? ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: EdgeInsets.only(
-                                left: index == 0 ? 20.w : 0,
-                                right: 15.w,
-                              ),
-                              child: const FlashSaleShimmer(),
-                            );
-                          },
-                        )
-                        : ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 4,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: EdgeInsets.only(
-                                left: index == 0 ? 20.w : 0,
-                                right: 15.w,
-                              ),
-                              child: FlashSaleCard(
-                                productImageUrl:
-                                    'assets/images/flash_sale_${index + 1}.jpg',
-                                productName: 'Properti Flash Sale ${index + 1}',
-                                originalPrice: 2000000 + (index * 500000),
-                                discountedPrice: 1500000 + (index * 400000),
-                                remainingStock: 10 - index,
-                                progress: (8 - index) / 10,
-                              ),
-                            );
-                          },
-                        ),
+              BlocBuilder<PropertyCubit, PropertyState>(
+                builder: (context, state) {
+                  final properties = context.read<PropertyCubit>().userPostedProperties;
+
+                  if (properties.isEmpty) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Text(
+                        'Belum ada properti yang kamu posting.',
+                        style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+                      ),
+                    );
+                  }
+
+                  final limitedProps = properties.take(6).toList();
+
+                  return SizedBox(
+                    height: 220.h,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: limitedProps.length,
+                      itemBuilder: (context, index) {
+                        final property = limitedProps[index];
+                        return Container(
+                          margin: EdgeInsets.only(
+                            left: index == 0 ? 20.w : 10.w,
+                            right: 10.w,
+                          ),
+                          child: HouseCard(
+                            title: property.namaRumah ?? 'Tanpa Judul',
+                            price: property.harga?.toString() ?? 'Rp -',
+                            location: property.lokasi ?? 'Lokasi tidak diketahui',
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
               SizedBox(height: 10.h),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildActionButton(IconData icon, String text) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15.r),
-        border: Border.all(color: Colors.grey[200]!),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 30.w, color: const Color(0xFFFF6B00)),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -53,7 +53,7 @@ class PropertyCubit extends Cubit<PropertyState> {
 
       List<PropertyDto> result;
       if (role == 'pembeli') {
-        result = await _api.getBuyerProperties();
+        result = await _api.getBuyerProperties('Bearer $token'); // ✅ pakai token
       } else {
         result = await _api.getMyProperties(role, 'Bearer $token');
       }
@@ -116,8 +116,8 @@ class PropertyCubit extends Cubit<PropertyState> {
 
       await _api.updateProperty(role, propertyId, request, 'Bearer $token');
 
-      // Perbarui data lokal juga
-      final index = userPostedProperties.indexWhere((e) => e.propertyId == propertyId);
+      final index =
+          userPostedProperties.indexWhere((e) => e.propertyId == propertyId);
       if (index != -1) {
         final updatedProperty = userPostedProperties[index].copyWith(
           namaRumah: request.namaRumah,

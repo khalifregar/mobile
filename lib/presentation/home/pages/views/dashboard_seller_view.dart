@@ -10,7 +10,7 @@ import 'package:propedia/presentation/home/pages/seller/post.dart';
 import 'package:propedia/presentation/home/widgets/penjual/discover_new.dart';
 import 'package:propedia/presentation/home/widgets/penjual/post_card.dart';
 import 'package:propedia/presentation/home/widgets/penjual/post_feeds.dart';
-import 'package:propedia/presentation/home/widgets/snack_item_shimmer.dart';
+// import 'package:propedia/presentation/home/widgets/snack_item_shimmer.dart'; // Remove this import
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class DashboardPenjualView extends StatefulWidget {
@@ -75,8 +75,7 @@ class _DashboardPenjualViewState extends State<DashboardPenjualView> {
     final String defaultProfileImageUrl =
         'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
 
-    bool showShimmer =
-        _isRefreshingData || widget.dashboardLogic.isLoadingHomePage;
+    // bool showShimmer = _isRefreshingData || widget.dashboardLogic.isLoadingHomePage; // Remove or comment out this line
 
     return SafeArea(
       child: LiquidPullToRefresh(
@@ -104,12 +103,11 @@ class _DashboardPenjualViewState extends State<DashboardPenjualView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder:
-                                    (context) => ProfilePage(
-                                      userName: widget.userName,
-                                      userEmail: widget.userEmail,
-                                      userRole: widget.userRole,
-                                    ),
+                                builder: (context) => ProfilePage(
+                                  userName: widget.userName,
+                                  userEmail: widget.userEmail,
+                                  userRole: widget.userRole,
+                                ),
                               ),
                             );
                           },
@@ -123,18 +121,16 @@ class _DashboardPenjualViewState extends State<DashboardPenjualView> {
                                 'Error loading profile image: $exception',
                               );
                             },
-                            child:
-                                defaultProfileImageUrl.isEmpty
-                                    ? Icon(
-                                        Icons.person,
-                                        size: 25.w,
-                                        color: Colors.white,
-                                      )
-                                    : null,
-                            backgroundColor:
-                                defaultProfileImageUrl.isEmpty
-                                    ? Colors.grey[300]
-                                    : null,
+                            child: defaultProfileImageUrl.isEmpty
+                                ? Icon(
+                                    Icons.person,
+                                    size: 25.w,
+                                    color: Colors.white,
+                                  )
+                                : null,
+                            backgroundColor: defaultProfileImageUrl.isEmpty
+                                ? Colors.grey[300]
+                                : null,
                           ),
                         ),
                         SizedBox(width: 10.w),
@@ -173,20 +169,16 @@ class _DashboardPenjualViewState extends State<DashboardPenjualView> {
               ),
               SizedBox(height: 20.h),
               SizedBox(height: 10.h),
-              showShimmer
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: const MenuSectionShimmer(),
-                    )
-                  : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: MenuSection(
-                        allMenuItems: widget.dashboardLogic.allMenuItems,
-                        onItemTap: (index) {
-                          widget.dashboardLogic.onMenuItemTapped(context, index);
-                        },
-                      ),
-                    ),
+              // Remove the conditional rendering for MenuSectionShimmer
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: MenuSection(
+                  allMenuItems: widget.dashboardLogic.allMenuItems,
+                  onItemTap: (index) {
+                    widget.dashboardLogic.onMenuItemTapped(context, index);
+                  },
+                ),
+              ),
               SizedBox(height: 10.h),
 
               Padding(
@@ -231,20 +223,8 @@ class _DashboardPenjualViewState extends State<DashboardPenjualView> {
               ),
               SizedBox(height: 10.h),
 
-              showShimmer
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Column(
-                        children: List.generate(
-                          3,
-                          (index) => Padding(
-                            padding: EdgeInsets.only(bottom: 10.h),
-                            child: const SnackItemShimmer(),
-                          ),
-                        ),
-                      ),
-                    )
-                  : const PostCardFeeds(),
+              // Remove the conditional rendering for SnackItemShimmer
+              const PostCardFeeds(),
             ],
           ),
         ),

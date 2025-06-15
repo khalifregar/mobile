@@ -47,7 +47,10 @@ dependencies:
   bloc: ^9.0.0
   flutter_bloc: ^9.1.1
   shared_preferences: ^2.5.3
-  dotted_border: 2.1.0
+  dotted_border: ^2.1.0
+  geolocator: ^11.0.0
+  geocoding: ^4.0.0
+  string_similarity: ^2.1.1
 
 dev_dependencies:
   flutter_test:
