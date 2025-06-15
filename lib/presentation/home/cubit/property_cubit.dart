@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:propedia/models/dtos/stores/properties_dto.dart';
@@ -12,6 +11,8 @@ class PropertyCubit extends Cubit<PropertyState> {
   final PropertiesApiService _api;
   List<PropertyDto> userPostedProperties = [];
 
+  PropertyDto? editingProperty;
+
   PropertyCubit(this._api) : super(const PropertyState.initial()) {
     _loadFromPrefs();
   }
@@ -22,7 +23,8 @@ class PropertyCubit extends Cubit<PropertyState> {
     if (jsonString != null) {
       try {
         final List<dynamic> decoded = json.decode(jsonString);
-        userPostedProperties = decoded.map((e) => PropertyDto.fromJson(e)).toList();
+        userPostedProperties =
+            decoded.map((e) => PropertyDto.fromJson(e)).toList();
         emit(PropertyState.success(userPostedProperties));
       } catch (e) {
         debugPrint('❌ Failed to load from prefs: $e');
@@ -32,15 +34,24 @@ class PropertyCubit extends Cubit<PropertyState> {
 
   Future<void> _saveToPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    final encoded = json.encode(userPostedProperties.map((e) => e.toJson()).toList());
+    final encoded =
+        json.encode(userPostedProperties.map((e) => e.toJson()).toList());
     await prefs.setString('userPostedProperties', encoded);
   }
 
-  Future<void> fetchAllProperties(String role, String? token) async {
+  Future<String> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    if (token == null) throw Exception("Token tidak ditemukan");
+    return token;
+  }
+
+  Future<void> fetchAllProperties(String role) async {
     emit(const PropertyState.loading());
     try {
-      List<PropertyDto> result;
+      final token = await _getToken();
 
+      List<PropertyDto> result;
       if (role == 'pembeli') {
         result = await _api.getBuyerProperties();
       } else {
@@ -56,9 +67,11 @@ class PropertyCubit extends Cubit<PropertyState> {
     }
   }
 
-  Future<void> getDetail(String role, String propertyId, String? token) async {
+  Future<void> getDetail(String role, String propertyId) async {
     emit(const PropertyState.loading());
     try {
+      final token = await _getToken();
+
       final property = (role == 'pembeli')
           ? await _api.getBuyerPropertyDetail(propertyId)
           : await _api.getPropertyDetail(role, propertyId, 'Bearer $token');
@@ -69,10 +82,13 @@ class PropertyCubit extends Cubit<PropertyState> {
     }
   }
 
-  Future<void> create(String role, CreatePropertyRequest request, String? token) async {
+  Future<void> create(String role, CreatePropertyRequest request) async {
     emit(const PropertyState.loading());
     try {
-      final response = await _api.createProperty(role, request, 'Bearer $token');
+      final token = await _getToken();
+
+      final response =
+          await _api.createProperty(role, request, 'Bearer $token');
       final property = response.data;
 
       userPostedProperties.insert(0, property);
@@ -89,32 +105,61 @@ class PropertyCubit extends Cubit<PropertyState> {
     }
   }
 
-  Future<void> update(String role, String propertyId, UpdatePropertyRequest request, String? token) async {
+  Future<void> update(
+    String role,
+    String propertyId,
+    UpdatePropertyRequest request,
+  ) async {
     emit(const PropertyState.loading());
     try {
+      final token = await _getToken();
+
       await _api.updateProperty(role, propertyId, request, 'Bearer $token');
+
+      // Perbarui data lokal juga
+      final index = userPostedProperties.indexWhere((e) => e.propertyId == propertyId);
+      if (index != -1) {
+        final updatedProperty = userPostedProperties[index].copyWith(
+          namaRumah: request.namaRumah,
+          harga: request.harga,
+          tipeRumah: request.tipeRumah,
+          deskripsi: request.deskripsi,
+          lokasi: request.lokasi,
+        );
+        userPostedProperties[index] = updatedProperty;
+        await _saveToPrefs();
+      }
+
       emit(const PropertyState.updated());
+      emit(PropertyState.success(userPostedProperties));
     } catch (e) {
       debugPrint('❌ Error updateProperty: $e');
       emit(PropertyState.error("Gagal update properti: ${e.toString()}"));
     }
   }
 
-  Future<void> delete(String role, String propertyId, String? token) async {
+  Future<void> delete(String role, String propertyId) async {
     emit(const PropertyState.loading());
     try {
+      final token = await _getToken();
       await _api.deleteProperty(role, propertyId, 'Bearer $token');
+
       userPostedProperties.removeWhere((e) => e.propertyId == propertyId);
       await _saveToPrefs();
+
+      debugPrint('✅ Properti $propertyId berhasil dihapus');
       emit(const PropertyState.deleted());
-    } catch (e) {
+      emit(PropertyState.success(userPostedProperties));
+    } catch (e, stack) {
       debugPrint('❌ Error deleteProperty: $e');
+      debugPrint('📌 Stacktrace: $stack');
       emit(PropertyState.error("Gagal hapus properti: ${e.toString()}"));
     }
   }
 
-  Future<List<String>> getPropertyTypes(String? token) async {
+  Future<List<String>> getPropertyTypes() async {
     try {
+      final token = await _getToken();
       final result = await _api.getPropertyTypes('Bearer $token');
       debugPrint("📦 getPropertyTypes: ${result.types}");
       return result.types;
@@ -122,5 +167,14 @@ class PropertyCubit extends Cubit<PropertyState> {
       debugPrint('❌ Error getPropertyTypes: $e');
       throw Exception('Gagal ambil tipe properti: $e');
     }
+  }
+
+  void startEditing(PropertyDto property) {
+    editingProperty = property;
+    debugPrint("📝 Mulai edit properti: ${property.propertyId}");
+  }
+
+  void clearEditing() {
+    editingProperty = null;
   }
 }

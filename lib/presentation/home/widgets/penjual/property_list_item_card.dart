@@ -3,13 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:propedia/presentation/home/pages/seller/post.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:propedia/models/dtos/stores/properties_dto.dart';
 import 'package:propedia/presentation/home/cubit/property_cubit.dart';
 
 class PropertyListItemCard extends StatefulWidget {
   final PropertyDto property;
-  const PropertyListItemCard({super.key, required this.property});
+  final VoidCallback? onEditTap;
+
+  const PropertyListItemCard({
+    super.key,
+    required this.property,
+    this.onEditTap,
+  });
 
   @override
   State<PropertyListItemCard> createState() => _PropertyListItemCardState();
@@ -34,29 +41,25 @@ class _PropertyListItemCardState extends State<PropertyListItemCard> {
 
     final saved = prefs.getString('transaction_$id');
     if (saved != null) {
-      debugPrint('🔄 Loaded transaction: $saved for $id');
       setState(() => transactionNumber = saved);
       return;
     }
 
     final random = Random();
-    final left = random.nextInt(99) + 1;
-    final mid =
-        List.generate(6, (_) => String.fromCharCode(random.nextInt(26) + 65)).join();
-    final right =
-        List.generate(2, (_) => String.fromCharCode(random.nextInt(26) + 65)).join();
-    final gen = 'B-$left-RK$mid-$right';
+    final gen = 'B-${random.nextInt(99) + 1}-RK${_randStr(6)}-${_randStr(2)}';
 
     await prefs.setString('transaction_$id', gen);
-    debugPrint('✅ Generated transaction: $gen for $id');
     setState(() => transactionNumber = gen);
+  }
+
+  String _randStr(int len) {
+    final random = Random();
+    return List.generate(len, (_) => String.fromCharCode(random.nextInt(26) + 65)).join();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (transactionNumber == null) {
-      return const SizedBox(); // bisa diganti shimmer loading
-    }
+    if (transactionNumber == null) return const SizedBox();
 
     return GestureDetector(
       onTap: () => _showBottomSheet(context),
@@ -80,10 +83,7 @@ class _PropertyListItemCardState extends State<PropertyListItemCard> {
             children: [
               Text(
                 'Nomor Transaksi: $transactionNumber',
-                style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueGrey),
+                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: Colors.blueGrey),
               ),
               SizedBox(height: 10.h),
               _buildRow('Nama', widget.property.namaRumah ?? '-'),
@@ -111,10 +111,7 @@ class _PropertyListItemCardState extends State<PropertyListItemCard> {
         Expanded(
           child: Text(
             value,
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: valueColor ?? Colors.black,
-            ),
+            style: TextStyle(fontSize: 12.sp, color: valueColor ?? Colors.black),
             textAlign: TextAlign.end,
           ),
         ),
@@ -136,13 +133,10 @@ class _PropertyListItemCardState extends State<PropertyListItemCard> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Detail Properti',
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+              Text('Detail Properti', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
               SizedBox(height: 16.h),
-              Text(
-                'Nomor Transaksi: $transactionNumber',
-                style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
-              ),
+              Text('Nomor Transaksi: $transactionNumber',
+                  style: TextStyle(fontSize: 12.sp, color: Colors.grey[600])),
               SizedBox(height: 10.h),
               _buildRow('Nama :', widget.property.namaRumah ?? '-'),
               SizedBox(height: 10.h),
@@ -166,7 +160,12 @@ class _PropertyListItemCardState extends State<PropertyListItemCard> {
                       ),
                       onPressed: () {
                         Navigator.pop(ctx);
-                        // tambahkan navigasi ke edit jika diperlukan
+                        final cubit = context.read<PropertyCubit>();
+                        cubit.startEditing(widget.property);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const PostPenjualanPage()),
+                        );
                       },
                       child: const Text('Ubah'),
                     ),
@@ -180,20 +179,17 @@ class _PropertyListItemCardState extends State<PropertyListItemCard> {
                       ),
                       onPressed: () async {
                         Navigator.pop(ctx);
+
                         final confirm = await showDialog<bool>(
                           context: context,
                           builder: (c) => AlertDialog(
                             title: const Text('Konfirmasi Hapus'),
-                            content:
-                                const Text('Yakin ingin menghapus properti ini?'),
+                            content: const Text('Yakin ingin menghapus properti ini?'),
                             actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(c, false),
-                                child: const Text('Batal'),
-                              ),
+                              TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Batal')),
                               TextButton(
                                 onPressed: () => Navigator.pop(c, true),
-                                child: const Text('Hapus'),
+                                child: const Text('Hapus', style: TextStyle(color: Colors.red)),
                               ),
                             ],
                           ),
@@ -204,24 +200,19 @@ class _PropertyListItemCardState extends State<PropertyListItemCard> {
                         try {
                           final cubit = context.read<PropertyCubit>();
                           final prefs = await SharedPreferences.getInstance();
-                          final token = prefs.getString('accessToken');
+                          final token = prefs.getString('access_token');
                           final role = prefs.getString('role');
 
                           if (role == null || token == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content:
-                                      Text('Token atau role tidak tersedia')),
+                              const SnackBar(content: Text('Token atau role tidak tersedia')),
                             );
                             return;
                           }
 
-                          await cubit.delete(role, widget.property.propertyId!, token);
-                          await cubit.fetchAllProperties(role, token);
-
+                          await cubit.delete(role, widget.property.propertyId!);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Properti berhasil dihapus')),
+                            const SnackBar(content: Text('Properti berhasil dihapus')),
                           );
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(

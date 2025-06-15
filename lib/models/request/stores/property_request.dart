@@ -17,6 +17,7 @@ class CreatePropertyRequest with _$CreatePropertyRequest {
       _$CreatePropertyRequestFromJson(json);
 }
 
+
 @freezed
 class UpdatePropertyRequest with _$UpdatePropertyRequest {
   const factory UpdatePropertyRequest({

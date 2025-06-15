@@ -23,6 +23,7 @@ class AuthCubit extends Cubit<AuthState> {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString("access_token", d.token);
         await prefs.setString("user_id", d.id.toString());
+        await prefs.setString("role", d.role); // ✅ FIXED
 
         final user = UserDto(
           id: d.id,
@@ -30,7 +31,7 @@ class AuthCubit extends Cubit<AuthState> {
           email: d.email,
           phone: d.phone,
           role: d.role,
-          address: d.address ?? '', // ✅ pastikan tidak null
+          address: d.address ?? '',
           isVerified: true,
           isActive: true,
           createdAt: d.createdAt,
@@ -66,9 +67,7 @@ class AuthCubit extends Cubit<AuthState> {
       } else if (userType == UserType.pembeli) {
         await _authApi.pembeliRegister(request.toJson());
       } else {
-        emit(
-          const AuthState.error("Jenis pengguna tidak valid untuk registrasi."),
-        );
+        emit(const AuthState.error("Jenis pengguna tidak valid untuk registrasi."));
         return;
       }
       emit(const AuthState.loggedOut());
@@ -96,7 +95,7 @@ class AuthCubit extends Cubit<AuthState> {
       }
 
       final response = await _authApi.getMyProfile("Bearer $token");
-      final data = response.data['data']; // ✅ ambil isi dari key "data"
+      final data = response.data['data'];
       final user = UserDto.fromJson(data);
       emit(AuthState.authenticated(user));
     } catch (e) {
@@ -126,6 +125,7 @@ class AuthCubit extends Cubit<AuthState> {
       await _authApi.logout(id, "Bearer $token");
       await prefs.remove("access_token");
       await prefs.remove("user_id");
+      await prefs.remove("role"); // ✅ tambahkan juga untuk bersih
 
       emit(const AuthState.loggedOut());
     } catch (e) {
@@ -148,11 +148,8 @@ class AuthCubit extends Cubit<AuthState> {
           httpResponse.response.statusCode == 201) {
         emit(const AuthState.otpSent());
       } else {
-        emit(
-          AuthState.error(
-            httpResponse.response.statusMessage ?? "Gagal kirim OTP",
-          ),
-        );
+        emit(AuthState.error(
+            httpResponse.response.statusMessage ?? "Gagal kirim OTP"));
       }
     } catch (e) {
       String errorMessage = "Gagal kirim OTP: ${e.toString()}";
@@ -166,57 +163,54 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-Future<void> verifyOtp(VerifyOtpRequest request) async {
-  emit(const AuthState.loading());
-  try {
-    final httpResponse = await _authApi.verifyOtp(request.toJson());
-    if (httpResponse.response.statusCode == 200) {
-      final data = httpResponse.data;
+  Future<void> verifyOtp(VerifyOtpRequest request) async {
+    emit(const AuthState.loading());
+    try {
+      final httpResponse = await _authApi.verifyOtp(request.toJson());
+      if (httpResponse.response.statusCode == 200) {
+        final data = httpResponse.data;
 
-      final token = data['token'];
-      final userJson = data['user'];
+        final token = data['token'];
+        final userJson = data['user'];
 
-      if (token != null && userJson != null) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString("access_token", token);
-        await prefs.setString("user_id", userJson['id'].toString());
+        if (token != null && userJson != null) {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString("access_token", token);
+          await prefs.setString("user_id", userJson['id'].toString());
+          await prefs.setString("role", userJson['role']); // ✅ FIXED
 
-        final user = UserDto(
-          id: userJson['id'],
-          username: userJson['username'],
-          email: userJson['email'],
-          phone: userJson['phone'],
-          role: userJson['role'],
-          address: userJson['address'] ?? '',
-          isVerified: true,
-          isActive: true,
-          createdAt: userJson['created_at'],
-          updatedAt: userJson['updated_at'],
-        );
+          final user = UserDto(
+            id: userJson['id'],
+            username: userJson['username'],
+            email: userJson['email'],
+            phone: userJson['phone'],
+            role: userJson['role'],
+            address: userJson['address'] ?? '',
+            isVerified: true,
+            isActive: true,
+            createdAt: userJson['created_at'],
+            updatedAt: userJson['updated_at'],
+          );
 
-        emit(AuthState.authenticated(user));
+          emit(AuthState.authenticated(user));
+        } else {
+          emit(const AuthState.error("Verifikasi gagal: data tidak lengkap."));
+        }
       } else {
-        emit(const AuthState.error("Verifikasi gagal: data tidak lengkap."));
+        emit(AuthState.error(
+            httpResponse.response.statusMessage ?? "OTP verifikasi gagal"));
       }
-    } else {
-      emit(
-        AuthState.error(
-          httpResponse.response.statusMessage ?? "OTP verifikasi gagal",
-        ),
-      );
+    } catch (e) {
+      String errorMessage = "OTP verifikasi gagal: ${e.toString()}";
+      if (e is DioException && e.response?.data is Map) {
+        errorMessage =
+            e.response!.data['message'] ??
+            e.response!.statusMessage ??
+            errorMessage;
+      }
+      emit(AuthState.error(errorMessage));
     }
-  } catch (e) {
-    String errorMessage = "OTP verifikasi gagal: ${e.toString()}";
-    if (e is DioException && e.response?.data is Map) {
-      errorMessage =
-          e.response!.data['message'] ??
-          e.response!.statusMessage ??
-          errorMessage;
-    }
-    emit(AuthState.error(errorMessage));
   }
-}
-
 
   Future<void> checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();

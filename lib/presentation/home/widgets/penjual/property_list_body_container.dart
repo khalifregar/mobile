@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:propedia/presentation/home/cubit/property_cubit.dart';
 import 'package:propedia/presentation/home/cubit/property_state.dart';
+import 'package:propedia/presentation/home/pages/seller/post.dart';
 import 'package:propedia/presentation/home/widgets/penjual/property_list_item_card.dart';
 
 class PropertyListBodyContainer extends StatefulWidget {
@@ -17,9 +18,8 @@ class _PropertyListBodyContainerState extends State<PropertyListBodyContainer> {
   @override
   void initState() {
     super.initState();
-
     final cubit = context.read<PropertyCubit>();
-    cubit.fetchAllProperties('penjual', null);
+    cubit.fetchAllProperties('penjual');
   }
 
   @override
@@ -53,8 +53,7 @@ class _PropertyListBodyContainerState extends State<PropertyListBodyContainer> {
                         padding: EdgeInsets.all(20.h),
                         child: Text(
                           'Yahh, belum ada data 🥲',
-                          style:
-                              TextStyle(fontSize: 14.sp, color: Colors.grey),
+                          style: TextStyle(fontSize: 14.sp, color: Colors.grey),
                         ),
                       ),
                     );
@@ -66,7 +65,19 @@ class _PropertyListBodyContainerState extends State<PropertyListBodyContainer> {
                     itemCount: properties.length,
                     itemBuilder: (context, index) {
                       final p = properties[index];
-                      return PropertyListItemCard(property: p);
+                      return PropertyListItemCard(
+                        property: p,
+                        onEditTap: () {
+                          final cubit = context.read<PropertyCubit>();
+                          cubit.startEditing(p); // ⬅️ Simpan state editing
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const PostPenjualanPage(),
+                            ),
+                          );
+                        },
+                      );
                     },
                   );
                 },
@@ -82,7 +93,10 @@ class _PropertyListBodyContainerState extends State<PropertyListBodyContainer> {
                 detail: (_) => const SizedBox(),
                 created: (_) => const SizedBox(),
                 updated: () => const SizedBox(),
-                deleted: () => const SizedBox(),
+                deleted: () {
+                  context.read<PropertyCubit>().fetchAllProperties('penjual');
+                  return const SizedBox();
+                },
               );
             },
           ),

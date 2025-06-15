@@ -28,21 +28,33 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
 
   List<String> _houseTypes = [];
   bool _loadingTypes = true;
+  bool isEditMode = false;
+  String? editingId;
 
   @override
   void initState() {
     super.initState();
+    _initForm();
     _fetchPropertyTypes();
   }
 
-  Future<void> _fetchPropertyTypes() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
-    if (token == null) return;
+  void _initForm() {
+    final editing = context.read<PropertyCubit>().editingProperty;
+    if (editing != null) {
+      isEditMode = true;
+      editingId = editing.propertyId;
+      _namaRumahController.text = editing.namaRumah ?? '';
+      _hargaController.text = (editing.harga ?? 0).toString();
+      _tipeRumahController.text = editing.tipeRumah ?? '';
+      _deskripsiController.text = editing.deskripsi ?? '';
+      _lokasiController.text = editing.lokasi ?? '';
+    }
+  }
 
+  Future<void> _fetchPropertyTypes() async {
     try {
       final cubit = context.read<PropertyCubit>();
-      final types = await cubit.getPropertyTypes(token);
+      final types = await cubit.getPropertyTypes();
       setState(() {
         _houseTypes = types;
         _loadingTypes = false;
@@ -156,14 +168,7 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
       return;
     }
 
-    debugPrint('📤 Submitting property...');
-    debugPrint('Nama: $namaRumah');
-    debugPrint('Harga: $harga');
-    debugPrint('Tipe: $tipeRumah');
-    debugPrint('Deskripsi: $deskripsi');
-    debugPrint('Lokasi: $lokasi');
-
-    final request = CreatePropertyRequest(
+    final request = UpdatePropertyRequest(
       namaRumah: namaRumah,
       harga: harga,
       tipeRumah: tipeRumah,
@@ -171,20 +176,21 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
       lokasi: lokasi,
     );
 
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
+    final cubit = context.read<PropertyCubit>();
 
-    if (token == null || token.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Token tidak ditemukan. Login ulang!'),
-          backgroundColor: Colors.red,
-        ),
+    if (isEditMode && editingId != null) {
+      await cubit.update('penjual', editingId!, request);
+      cubit.clearEditing();
+    } else {
+      final createRequest = CreatePropertyRequest(
+        namaRumah: namaRumah,
+        harga: harga,
+        tipeRumah: tipeRumah,
+        deskripsi: deskripsi,
+        lokasi: lokasi,
       );
-      return;
+      await cubit.create('penjual', createRequest);
     }
-
-    context.read<PropertyCubit>().create('penjual', request, token);
   }
 
   void _resetForm() {
@@ -200,30 +206,21 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
     return BlocListener<PropertyCubit, PropertyState>(
       listener: (context, state) {
         state.whenOrNull(
-          loading: () {
+          created: (_) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Mengirim data properti...')),
+              SnackBar(content: Text('Berhasil menambahkan properti.'), backgroundColor: primaryOrange),
             );
+            _resetForm();
           },
-created: (property) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: const Text('Postingan properti berhasil dibuat!'),
-      backgroundColor: primaryOrange,
-    ),
-  );
-  _resetForm();
-
-  // Optional: debugPrint data properti
-  debugPrint("🆕 Properti ID: ${property.propertyId}");
-},
-
-          error: (message) {
+          updated: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Gagal membuat postingan: $message'),
-                backgroundColor: Colors.red,
-              ),
+              SnackBar(content: Text('Berhasil mengubah properti.'), backgroundColor: primaryOrange),
+            );
+            Navigator.pop(context);
+          },
+          error: (msg) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Gagal: $msg'), backgroundColor: Colors.red),
             );
           },
         );
@@ -234,12 +231,8 @@ created: (property) {
           slivers: [
             SliverAppBar(
               title: Text(
-                'Buat Postingan Baru',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                  color: darkText,
-                ),
+                isEditMode ? 'Edit Properti' : 'Buat Postingan Baru',
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold, color: darkText),
               ),
               centerTitle: true,
               backgroundColor: Colors.white,
@@ -261,46 +254,23 @@ created: (property) {
                   children: [
                     Text(
                       'Detail Properti',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                        color: darkText,
-                      ),
+                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: darkText),
                     ),
                     SizedBox(height: 15.h),
-                    CustomTextField(
-                      label: 'Nama Rumah',
-                      hint: 'Contoh: Villa Cantik di Bali',
-                      controller: _namaRumahController,
-                    ),
+                    CustomTextField(label: 'Nama Rumah', controller: _namaRumahController, hint: '',),
                     SizedBox(height: 20.h),
-                    CustomTextField(
-                      label: 'Harga (Rp)',
-                      hint: 'Contoh: 2.000.000.000',
-                      keyboardType: TextInputType.number,
-                      controller: _hargaController,
-                    ),
+                    CustomTextField(label: 'Harga (Rp)', controller: _hargaController, keyboardType: TextInputType.number, hint: '',),
                     SizedBox(height: 20.h),
                     CustomTextField(
                       label: 'Tipe Rumah',
-                      hint: 'Pilih tipe rumah',
                       controller: _tipeRumahController,
                       readOnly: true,
-                      onTap: _showHouseTypeBottomSheet,
+                      onTap: _showHouseTypeBottomSheet, hint: '',
                     ),
                     SizedBox(height: 20.h),
-                    CustomTextField(
-                      label: 'Deskripsi',
-                      hint: 'Jelaskan fitur, kondisi, dan keunggulan properti Anda.',
-                      maxLines: 5,
-                      controller: _deskripsiController,
-                    ),
+                    CustomTextField(label: 'Deskripsi', controller: _deskripsiController, maxLines: 5, hint: '',),
                     SizedBox(height: 20.h),
-                    CustomTextField(
-                      label: 'Lokasi',
-                      hint: 'Contoh: Denpasar, Bali',
-                      controller: _lokasiController,
-                    ),
+                    CustomTextField(label: 'Lokasi', controller: _lokasiController, hint: '',),
                     SizedBox(height: 30.h),
                   ],
                 ),

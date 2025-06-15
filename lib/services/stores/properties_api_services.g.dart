@@ -33,7 +33,8 @@ class _PropertiesApiService implements PropertiesApiService {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
-    final _data = request;
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
     final _options = _setStreamType<CreatePropertyResponseDto>(Options(
       method: 'POST',
       headers: _headers,
