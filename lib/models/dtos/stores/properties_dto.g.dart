@@ -15,7 +15,10 @@ _$PropertyDtoImpl _$$PropertyDtoImplFromJson(Map<String, dynamic> json) =>
       harga: (json['harga'] as num?)?.toInt(),
       tipeRumah: json['tipe_rumah'] as String?,
       deskripsi: json['deskripsi'] as String?,
-      lokasi: json['lokasi'] as String?,
+      provinsi: json['provinsi'] as String?,
+      kabupaten: json['kabupaten'] as String?,
+      kecamatan: json['kecamatan'] as String?,
+      kelurahan: json['kelurahan'] as String?,
       createdAt: json['created_at'] == null
           ? null
           : DateTime.parse(json['created_at'] as String),
@@ -33,7 +36,10 @@ Map<String, dynamic> _$$PropertyDtoImplToJson(_$PropertyDtoImpl instance) =>
       'harga': instance.harga,
       'tipe_rumah': instance.tipeRumah,
       'deskripsi': instance.deskripsi,
-      'lokasi': instance.lokasi,
+      'provinsi': instance.provinsi,
+      'kabupaten': instance.kabupaten,
+      'kecamatan': instance.kecamatan,
+      'kelurahan': instance.kelurahan,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
     };

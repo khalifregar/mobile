@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:propedia/presentation/home/pages/payment/fake_payment_page.dart';
+
+import 'package:propedia/presentation/home/widgets/cart_page.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final int selectedIndex;
@@ -120,9 +121,9 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       case 0:
         return isSelected ? Icons.home : Icons.home_outlined;
       case 1:
-        return isSelected ? Icons.favorite : Icons.favorite_border;
+        return isSelected ? Icons.shopping_cart : Icons.shopping_cart_outlined;
       case 2:
-        return Icons.search; // Tetap sama karena tidak berubah
+        return Icons.search;
       case 3:
         return isSelected ? Icons.person : Icons.person_outline;
       default:
@@ -143,15 +144,13 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       child: InkWell(
         key: key,
         onTap: () {
-          if (index == 2) {
-            // Push ke halaman FakePayment langsung
+          if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const FakePaymentPage()),
+              MaterialPageRoute(builder: (_) => const CartPage()),
             );
             return;
           }
-
           widget.onItemTapped(index);
           _updateIndicatorPosition(index);
         },

@@ -10,13 +10,17 @@ class CreatePropertyRequest with _$CreatePropertyRequest {
     @JsonKey(name: 'deskripsi') required String deskripsi,
     @JsonKey(name: 'tipeRumah') required String tipeRumah,
     @JsonKey(name: 'harga') int? harga,
-    @JsonKey(name: 'lokasi') required String lokasi,
+
+    // ✅ Lokasi terpisah
+    @JsonKey(name: 'provinsi') required String provinsi,
+    @JsonKey(name: 'kabupaten') required String kabupaten,
+    @JsonKey(name: 'kecamatan') required String kecamatan,
+    @JsonKey(name: 'kelurahan') required String kelurahan,
   }) = _CreatePropertyRequest;
 
   factory CreatePropertyRequest.fromJson(Map<String, dynamic> json) =>
       _$CreatePropertyRequestFromJson(json);
 }
-
 
 @freezed
 class UpdatePropertyRequest with _$UpdatePropertyRequest {
@@ -25,7 +29,13 @@ class UpdatePropertyRequest with _$UpdatePropertyRequest {
     @JsonKey(name: 'deskripsi') String? deskripsi,
     @JsonKey(name: 'tipeRumah') String? tipeRumah,
     @JsonKey(name: 'harga') int? harga,
-    @JsonKey(name: 'lokasi') String? lokasi,
+
+    // ✅ Lokasi terpisah
+    @JsonKey(name: 'provinsi') String? provinsi,
+    @JsonKey(name: 'kabupaten') String? kabupaten,
+    @JsonKey(name: 'kecamatan') String? kecamatan,
+    @JsonKey(name: 'kelurahan') String? kelurahan,
+
     @JsonKey(name: 'isAvailable') bool? isAvailable,
   }) = _UpdatePropertyRequest;
 

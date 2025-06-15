@@ -13,7 +13,13 @@ class PropertyDto with _$PropertyDto {
     @JsonKey(name: 'harga') int? harga,
     @JsonKey(name: 'tipe_rumah') String? tipeRumah,
     String? deskripsi,
-    String? lokasi,
+
+    // ✅ Lokasi detail
+    String? provinsi,
+    String? kabupaten,
+    String? kecamatan,
+    String? kelurahan,
+
     @JsonKey(name: 'created_at') DateTime? createdAt,
     @JsonKey(name: 'updated_at') DateTime? updatedAt,
   }) = _PropertyDto;

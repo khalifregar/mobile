@@ -10,7 +10,6 @@ import 'package:propedia/presentation/home/pages/seller/post.dart';
 import 'package:propedia/presentation/home/widgets/penjual/discover_new.dart';
 import 'package:propedia/presentation/home/widgets/penjual/post_card.dart';
 import 'package:propedia/presentation/home/widgets/penjual/post_feeds.dart';
-// import 'package:propedia/presentation/home/widgets/snack_item_shimmer.dart'; // Remove this import
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class DashboardPenjualView extends StatefulWidget {
@@ -75,15 +74,12 @@ class _DashboardPenjualViewState extends State<DashboardPenjualView> {
     final String defaultProfileImageUrl =
         'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
 
-    // bool showShimmer = _isRefreshingData || widget.dashboardLogic.isLoadingHomePage; // Remove or comment out this line
-
     return SafeArea(
       child: LiquidPullToRefresh(
         key: _refreshIndicatorKey,
         onRefresh: _handleRefresh,
         showChildOpacityTransition: false,
-        // UBAH WARNA REFRESH SESUAI PERMINTAAN: 4DA8DA
-        color: const Color(0xFF4DA8DA), // Warna liquid indicator diubah menjadi 4DA8DA
+        color: const Color(0xFF4DA8DA),
         backgroundColor: Colors.white,
         height: 100,
         child: SingleChildScrollView(
@@ -103,11 +99,12 @@ class _DashboardPenjualViewState extends State<DashboardPenjualView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProfilePage(
-                                  userName: widget.userName,
-                                  userEmail: widget.userEmail,
-                                  userRole: widget.userRole,
-                                ),
+                                builder:
+                                    (context) => ProfilePage(
+                                      userName: widget.userName,
+                                      userEmail: widget.userEmail,
+                                      userRole: widget.userRole,
+                                    ),
                               ),
                             );
                           },
@@ -121,16 +118,18 @@ class _DashboardPenjualViewState extends State<DashboardPenjualView> {
                                 'Error loading profile image: $exception',
                               );
                             },
-                            child: defaultProfileImageUrl.isEmpty
-                                ? Icon(
-                                    Icons.person,
-                                    size: 25.w,
-                                    color: Colors.white,
-                                  )
-                                : null,
-                            backgroundColor: defaultProfileImageUrl.isEmpty
-                                ? Colors.grey[300]
-                                : null,
+                            child:
+                                defaultProfileImageUrl.isEmpty
+                                    ? Icon(
+                                      Icons.person,
+                                      size: 25.w,
+                                      color: Colors.white,
+                                    )
+                                    : null,
+                            backgroundColor:
+                                defaultProfileImageUrl.isEmpty
+                                    ? Colors.grey[300]
+                                    : null,
                           ),
                         ),
                         SizedBox(width: 10.w),
@@ -169,7 +168,6 @@ class _DashboardPenjualViewState extends State<DashboardPenjualView> {
               ),
               SizedBox(height: 20.h),
               SizedBox(height: 10.h),
-              // Remove the conditional rendering for MenuSectionShimmer
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: MenuSection(
@@ -223,7 +221,6 @@ class _DashboardPenjualViewState extends State<DashboardPenjualView> {
               ),
               SizedBox(height: 10.h),
 
-              // Remove the conditional rendering for SnackItemShimmer
               const PostCardFeeds(),
             ],
           ),

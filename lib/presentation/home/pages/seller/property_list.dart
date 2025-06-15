@@ -22,7 +22,7 @@ class PropertyListPage extends StatelessWidget {
           return Column(
             children: [
               const PropertyListSearchAndAddBar(),
-              const PropertyListBodyContainer()
+              const PropertyListBodyContainer(),
             ],
           );
         },

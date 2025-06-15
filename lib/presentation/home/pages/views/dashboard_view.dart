@@ -100,25 +100,35 @@ class _DashboardViewState extends State<DashboardView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProfilePage(
-                                  userName: widget.userName,
-                                  userEmail: widget.userEmail,
-                                  userRole: widget.userRole,
-                                ),
+                                builder:
+                                    (context) => ProfilePage(
+                                      userName: widget.userName,
+                                      userEmail: widget.userEmail,
+                                      userRole: widget.userRole,
+                                    ),
                               ),
                             );
                           },
                           child: CircleAvatar(
                             radius: 25.w,
-                            backgroundImage: NetworkImage(defaultProfileImageUrl),
-                            onBackgroundImageError: (_, __) =>
-                                debugPrint('Error loading profile image'),
-                            child: defaultProfileImageUrl.isEmpty
-                                ? Icon(Icons.person, size: 25.w, color: Colors.white)
-                                : null,
-                            backgroundColor: defaultProfileImageUrl.isEmpty
-                                ? Colors.grey[300]
-                                : null,
+                            backgroundImage: NetworkImage(
+                              defaultProfileImageUrl,
+                            ),
+                            onBackgroundImageError:
+                                (_, __) =>
+                                    debugPrint('Error loading profile image'),
+                            child:
+                                defaultProfileImageUrl.isEmpty
+                                    ? Icon(
+                                      Icons.person,
+                                      size: 25.w,
+                                      color: Colors.white,
+                                    )
+                                    : null,
+                            backgroundColor:
+                                defaultProfileImageUrl.isEmpty
+                                    ? Colors.grey[300]
+                                    : null,
                           ),
                         ),
                         SizedBox(width: 10.w),
@@ -127,7 +137,10 @@ class _DashboardViewState extends State<DashboardView> {
                           children: [
                             Text(
                               widget.dashboardLogic.getGreeting(),
-                              style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Colors.grey[700],
+                              ),
                             ),
                             Text(
                               widget.userName,
@@ -142,7 +155,11 @@ class _DashboardViewState extends State<DashboardView> {
                       ],
                     ),
                     IconButton(
-                      icon: Icon(Icons.notifications_none, size: 28.w, color: Colors.grey[700]),
+                      icon: Icon(
+                        Icons.notifications_none,
+                        size: 28.w,
+                        color: Colors.grey[700],
+                      ),
                       onPressed: () {},
                     ),
                   ],
@@ -160,7 +177,10 @@ class _DashboardViewState extends State<DashboardView> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(color: Colors.grey.shade300, width: 1.w),
+                        border: Border.all(
+                          color: Colors.grey.shade300,
+                          width: 1.w,
+                        ),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.05),
@@ -170,7 +190,10 @@ class _DashboardViewState extends State<DashboardView> {
                         ],
                       ),
                       child: IconButton(
-                        icon: Icon(Icons.menu_open, color: Colors.grey.shade600),
+                        icon: Icon(
+                          Icons.menu_open,
+                          color: Colors.grey.shade600,
+                        ),
                         onPressed: widget.dashboardLogic.navigateToFilterPage,
                         iconSize: 24.w,
                         padding: EdgeInsets.all(12.w),
@@ -199,7 +222,7 @@ class _DashboardViewState extends State<DashboardView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Untuk Kamu',
+                      'Disekitar Kamu',
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
@@ -213,7 +236,10 @@ class _DashboardViewState extends State<DashboardView> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => SeeAllPropertiesPage(lokasiUser: city ?? ''),
+                              builder:
+                                  (_) => SeeAllPropertiesPage(
+                                    lokasiUser: city ?? '',
+                                  ),
                             ),
                           );
                         }
@@ -233,14 +259,18 @@ class _DashboardViewState extends State<DashboardView> {
               SizedBox(height: 15.h),
               BlocBuilder<PropertyCubit, PropertyState>(
                 builder: (context, state) {
-                  final properties = context.read<PropertyCubit>().userPostedProperties;
+                  final properties =
+                      context.read<PropertyCubit>().userPostedProperties;
 
                   if (properties.isEmpty) {
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: Text(
                         'Belum ada properti yang kamu posting.',
-                        style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.grey[600],
+                        ),
                       ),
                     );
                   }
@@ -262,7 +292,30 @@ class _DashboardViewState extends State<DashboardView> {
                           child: HouseCard(
                             title: property.namaRumah ?? 'Tanpa Judul',
                             price: property.harga?.toString() ?? 'Rp -',
-                            location: property.lokasi ?? 'Lokasi tidak diketahui',
+                            location:
+                                [
+                                          property.kelurahan,
+                                          property.kecamatan,
+                                          property.kabupaten,
+                                          property.provinsi,
+                                        ]
+                                        .where(
+                                          (e) => (e ?? '').trim().isNotEmpty,
+                                        )
+                                        .join(', ')
+                                        .trim()
+                                        .isNotEmpty
+                                    ? [
+                                          property.kelurahan,
+                                          property.kecamatan,
+                                          property.kabupaten,
+                                          property.provinsi,
+                                        ]
+                                        .where(
+                                          (e) => (e ?? '').trim().isNotEmpty,
+                                        )
+                                        .join(', ')
+                                    : 'Lokasi tidak diketahui',
                           ),
                         );
                       },

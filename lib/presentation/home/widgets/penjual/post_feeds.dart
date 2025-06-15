@@ -10,14 +10,20 @@ class PostFeed extends StatelessWidget {
   final String title;
   final String description;
   final double price;
-  final String location;
+  final String provinsi;
+  final String kabupaten;
+  final String kecamatan;
+  final String kelurahan;
 
   const PostFeed({
     Key? key,
     required this.title,
     required this.description,
     required this.price,
-    required this.location,
+    required this.provinsi,
+    required this.kabupaten,
+    required this.kecamatan,
+    required this.kelurahan,
   }) : super(key: key);
 
   String _formatCurrency(double amount) {
@@ -27,6 +33,13 @@ class PostFeed extends StatelessWidget {
       decimalDigits: 0,
     );
     return formatCurrency.format(amount);
+  }
+
+  String _formatLocation() {
+    final parts = [kelurahan, kecamatan, kabupaten, provinsi]
+        .where((e) => e.isNotEmpty)
+        .join(', ');
+    return parts.isEmpty ? 'Lokasi tidak diketahui' : parts;
   }
 
   @override
@@ -54,9 +67,7 @@ class PostFeed extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10.r),
-            ),
+            ClipRRect(borderRadius: BorderRadius.circular(10.r)),
             SizedBox(height: 10.h),
             Text(
               title,
@@ -89,7 +100,7 @@ class PostFeed extends StatelessWidget {
                 SizedBox(width: 4.w),
                 Expanded(
                   child: Text(
-                    location,
+                    _formatLocation(),
                     style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -140,12 +151,14 @@ class PostCardFeeds extends StatelessWidget {
                         return Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                           child: PostFeed(
-  title: p.namaRumah ?? 'Tanpa Judul',
-  description: p.deskripsi ?? 'Tidak ada deskripsi',
-  price: (p.harga ?? 0).toDouble(),
-  location: p.lokasi ?? 'Lokasi tidak diketahui',
-),
-
+                            title: p.namaRumah ?? 'Tanpa Judul',
+                            description: p.deskripsi ?? 'Tidak ada deskripsi',
+                            price: (p.harga ?? 0).toDouble(),
+                            provinsi: p.provinsi ?? '',
+                            kabupaten: p.kabupaten ?? '',
+                            kecamatan: p.kecamatan ?? '',
+                            kelurahan: p.kelurahan ?? '',
+                          ),
                         );
                       },
                     ),

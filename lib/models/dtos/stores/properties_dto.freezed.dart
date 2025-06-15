@@ -31,8 +31,12 @@ mixin _$PropertyDto {
   int? get harga => throw _privateConstructorUsedError;
   @JsonKey(name: 'tipe_rumah')
   String? get tipeRumah => throw _privateConstructorUsedError;
-  String? get deskripsi => throw _privateConstructorUsedError;
-  String? get lokasi => throw _privateConstructorUsedError;
+  String? get deskripsi =>
+      throw _privateConstructorUsedError; // ✅ Lokasi detail
+  String? get provinsi => throw _privateConstructorUsedError;
+  String? get kabupaten => throw _privateConstructorUsedError;
+  String? get kecamatan => throw _privateConstructorUsedError;
+  String? get kelurahan => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   DateTime? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'updated_at')
@@ -62,7 +66,10 @@ abstract class $PropertyDtoCopyWith<$Res> {
       @JsonKey(name: 'harga') int? harga,
       @JsonKey(name: 'tipe_rumah') String? tipeRumah,
       String? deskripsi,
-      String? lokasi,
+      String? provinsi,
+      String? kabupaten,
+      String? kecamatan,
+      String? kelurahan,
       @JsonKey(name: 'created_at') DateTime? createdAt,
       @JsonKey(name: 'updated_at') DateTime? updatedAt});
 }
@@ -89,7 +96,10 @@ class _$PropertyDtoCopyWithImpl<$Res, $Val extends PropertyDto>
     Object? harga = freezed,
     Object? tipeRumah = freezed,
     Object? deskripsi = freezed,
-    Object? lokasi = freezed,
+    Object? provinsi = freezed,
+    Object? kabupaten = freezed,
+    Object? kecamatan = freezed,
+    Object? kelurahan = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -122,9 +132,21 @@ class _$PropertyDtoCopyWithImpl<$Res, $Val extends PropertyDto>
           ? _value.deskripsi
           : deskripsi // ignore: cast_nullable_to_non_nullable
               as String?,
-      lokasi: freezed == lokasi
-          ? _value.lokasi
-          : lokasi // ignore: cast_nullable_to_non_nullable
+      provinsi: freezed == provinsi
+          ? _value.provinsi
+          : provinsi // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kabupaten: freezed == kabupaten
+          ? _value.kabupaten
+          : kabupaten // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kecamatan: freezed == kecamatan
+          ? _value.kecamatan
+          : kecamatan // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kelurahan: freezed == kelurahan
+          ? _value.kelurahan
+          : kelurahan // ignore: cast_nullable_to_non_nullable
               as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -154,7 +176,10 @@ abstract class _$$PropertyDtoImplCopyWith<$Res>
       @JsonKey(name: 'harga') int? harga,
       @JsonKey(name: 'tipe_rumah') String? tipeRumah,
       String? deskripsi,
-      String? lokasi,
+      String? provinsi,
+      String? kabupaten,
+      String? kecamatan,
+      String? kelurahan,
       @JsonKey(name: 'created_at') DateTime? createdAt,
       @JsonKey(name: 'updated_at') DateTime? updatedAt});
 }
@@ -179,7 +204,10 @@ class __$$PropertyDtoImplCopyWithImpl<$Res>
     Object? harga = freezed,
     Object? tipeRumah = freezed,
     Object? deskripsi = freezed,
-    Object? lokasi = freezed,
+    Object? provinsi = freezed,
+    Object? kabupaten = freezed,
+    Object? kecamatan = freezed,
+    Object? kelurahan = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -212,9 +240,21 @@ class __$$PropertyDtoImplCopyWithImpl<$Res>
           ? _value.deskripsi
           : deskripsi // ignore: cast_nullable_to_non_nullable
               as String?,
-      lokasi: freezed == lokasi
-          ? _value.lokasi
-          : lokasi // ignore: cast_nullable_to_non_nullable
+      provinsi: freezed == provinsi
+          ? _value.provinsi
+          : provinsi // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kabupaten: freezed == kabupaten
+          ? _value.kabupaten
+          : kabupaten // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kecamatan: freezed == kecamatan
+          ? _value.kecamatan
+          : kecamatan // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kelurahan: freezed == kelurahan
+          ? _value.kelurahan
+          : kelurahan // ignore: cast_nullable_to_non_nullable
               as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -239,7 +279,10 @@ class _$PropertyDtoImpl implements _PropertyDto {
       @JsonKey(name: 'harga') this.harga,
       @JsonKey(name: 'tipe_rumah') this.tipeRumah,
       this.deskripsi,
-      this.lokasi,
+      this.provinsi,
+      this.kabupaten,
+      this.kecamatan,
+      this.kelurahan,
       @JsonKey(name: 'created_at') this.createdAt,
       @JsonKey(name: 'updated_at') this.updatedAt});
 
@@ -265,8 +308,15 @@ class _$PropertyDtoImpl implements _PropertyDto {
   final String? tipeRumah;
   @override
   final String? deskripsi;
+// ✅ Lokasi detail
   @override
-  final String? lokasi;
+  final String? provinsi;
+  @override
+  final String? kabupaten;
+  @override
+  final String? kecamatan;
+  @override
+  final String? kelurahan;
   @override
   @JsonKey(name: 'created_at')
   final DateTime? createdAt;
@@ -276,7 +326,7 @@ class _$PropertyDtoImpl implements _PropertyDto {
 
   @override
   String toString() {
-    return 'PropertyDto(id: $id, propertyId: $propertyId, userId: $userId, namaRumah: $namaRumah, harga: $harga, tipeRumah: $tipeRumah, deskripsi: $deskripsi, lokasi: $lokasi, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'PropertyDto(id: $id, propertyId: $propertyId, userId: $userId, namaRumah: $namaRumah, harga: $harga, tipeRumah: $tipeRumah, deskripsi: $deskripsi, provinsi: $provinsi, kabupaten: $kabupaten, kecamatan: $kecamatan, kelurahan: $kelurahan, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -295,7 +345,14 @@ class _$PropertyDtoImpl implements _PropertyDto {
                 other.tipeRumah == tipeRumah) &&
             (identical(other.deskripsi, deskripsi) ||
                 other.deskripsi == deskripsi) &&
-            (identical(other.lokasi, lokasi) || other.lokasi == lokasi) &&
+            (identical(other.provinsi, provinsi) ||
+                other.provinsi == provinsi) &&
+            (identical(other.kabupaten, kabupaten) ||
+                other.kabupaten == kabupaten) &&
+            (identical(other.kecamatan, kecamatan) ||
+                other.kecamatan == kecamatan) &&
+            (identical(other.kelurahan, kelurahan) ||
+                other.kelurahan == kelurahan) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -304,8 +361,21 @@ class _$PropertyDtoImpl implements _PropertyDto {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, propertyId, userId,
-      namaRumah, harga, tipeRumah, deskripsi, lokasi, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      propertyId,
+      userId,
+      namaRumah,
+      harga,
+      tipeRumah,
+      deskripsi,
+      provinsi,
+      kabupaten,
+      kecamatan,
+      kelurahan,
+      createdAt,
+      updatedAt);
 
   /// Create a copy of PropertyDto
   /// with the given fields replaced by the non-null parameter values.
@@ -332,7 +402,10 @@ abstract class _PropertyDto implements PropertyDto {
           @JsonKey(name: 'harga') final int? harga,
           @JsonKey(name: 'tipe_rumah') final String? tipeRumah,
           final String? deskripsi,
-          final String? lokasi,
+          final String? provinsi,
+          final String? kabupaten,
+          final String? kecamatan,
+          final String? kelurahan,
           @JsonKey(name: 'created_at') final DateTime? createdAt,
           @JsonKey(name: 'updated_at') final DateTime? updatedAt}) =
       _$PropertyDtoImpl;
@@ -358,9 +431,15 @@ abstract class _PropertyDto implements PropertyDto {
   @JsonKey(name: 'tipe_rumah')
   String? get tipeRumah;
   @override
-  String? get deskripsi;
+  String? get deskripsi; // ✅ Lokasi detail
   @override
-  String? get lokasi;
+  String? get provinsi;
+  @override
+  String? get kabupaten;
+  @override
+  String? get kecamatan;
+  @override
+  String? get kelurahan;
   @override
   @JsonKey(name: 'created_at')
   DateTime? get createdAt;

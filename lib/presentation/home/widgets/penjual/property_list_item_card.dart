@@ -34,7 +34,7 @@ class _PropertyListItemCardState extends State<PropertyListItemCard> {
   void _loadTransactionNumber() async {
     final prefs = await SharedPreferences.getInstance();
     final fallbackKey =
-        '${widget.property.namaRumah}-${widget.property.lokasi}-${widget.property.harga}'.toLowerCase();
+        '${widget.property.namaRumah}-${_formatLocation()}-${widget.property.harga}'.toLowerCase();
     final id = (widget.property.propertyId?.isNotEmpty == true)
         ? widget.property.propertyId!
         : fallbackKey;
@@ -55,6 +55,17 @@ class _PropertyListItemCardState extends State<PropertyListItemCard> {
   String _randStr(int len) {
     final random = Random();
     return List.generate(len, (_) => String.fromCharCode(random.nextInt(26) + 65)).join();
+  }
+
+  String _formatLocation() {
+    final parts = [
+      widget.property.kelurahan,
+      widget.property.kecamatan,
+      widget.property.kabupaten,
+      widget.property.provinsi,
+    ].where((e) => (e ?? '').trim().isNotEmpty).toList();
+
+    return parts.isEmpty ? '-' : parts.join(', ');
   }
 
   @override
@@ -90,7 +101,7 @@ class _PropertyListItemCardState extends State<PropertyListItemCard> {
               Divider(height: 16.h, thickness: 0.5, color: Colors.grey.shade200),
               _buildRow('Tipe Rumah', widget.property.tipeRumah ?? '-'),
               Divider(height: 16.h, thickness: 0.5, color: Colors.grey.shade200),
-              _buildRow('Lokasi', widget.property.lokasi ?? '-'),
+              _buildRow('Lokasi', _formatLocation()),
               Divider(height: 16.h, thickness: 0.5, color: Colors.grey.shade200),
               _buildRow(
                 'Harga',
@@ -140,7 +151,7 @@ class _PropertyListItemCardState extends State<PropertyListItemCard> {
               SizedBox(height: 10.h),
               _buildRow('Nama :', widget.property.namaRumah ?? '-'),
               SizedBox(height: 10.h),
-              _buildRow('Lokasi :', widget.property.lokasi ?? '-'),
+              _buildRow('Lokasi :', _formatLocation()),
               SizedBox(height: 10.h),
               _buildRow(
                 'Harga :',

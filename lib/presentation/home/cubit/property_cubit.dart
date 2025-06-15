@@ -105,38 +105,33 @@ class PropertyCubit extends Cubit<PropertyState> {
     }
   }
 
-  Future<void> update(
-    String role,
-    String propertyId,
-    UpdatePropertyRequest request,
-  ) async {
-    emit(const PropertyState.loading());
-    try {
-      final token = await _getToken();
+Future<void> update(
+  String role,
+  String propertyId,
+  UpdatePropertyRequest request,
+) async {
+  emit(const PropertyState.loading());
+  try {
+    final token = await _getToken();
 
-      await _api.updateProperty(role, propertyId, request, 'Bearer $token');
+    final updatedProperty =
+        await _api.updateProperty(role, propertyId, request, 'Bearer $token');
 
-      final index =
-          userPostedProperties.indexWhere((e) => e.propertyId == propertyId);
-      if (index != -1) {
-        final updatedProperty = userPostedProperties[index].copyWith(
-          namaRumah: request.namaRumah,
-          harga: request.harga,
-          tipeRumah: request.tipeRumah,
-          deskripsi: request.deskripsi,
-          lokasi: request.lokasi,
-        );
-        userPostedProperties[index] = updatedProperty;
-        await _saveToPrefs();
-      }
-
-      emit(const PropertyState.updated());
-      emit(PropertyState.success(userPostedProperties));
-    } catch (e) {
-      debugPrint('❌ Error updateProperty: $e');
-      emit(PropertyState.error("Gagal update properti: ${e.toString()}"));
+    final index =
+        userPostedProperties.indexWhere((e) => e.propertyId == propertyId);
+    if (index != -1) {
+      userPostedProperties[index] = updatedProperty;
+      await _saveToPrefs();
     }
+
+    emit(const PropertyState.updated());
+    emit(PropertyState.success(userPostedProperties));
+  } catch (e) {
+    debugPrint('❌ Error updateProperty: $e');
+    emit(PropertyState.error("Gagal update properti: ${e.toString()}"));
   }
+}
+
 
   Future<void> delete(String role, String propertyId) async {
     emit(const PropertyState.loading());
@@ -177,4 +172,30 @@ class PropertyCubit extends Cubit<PropertyState> {
   void clearEditing() {
     editingProperty = null;
   }
+
+  Future<void> fetchByLocation({
+  String? provinsi,
+  String? kabupaten,
+  String? kecamatan,
+  String? kelurahan,
+}) async {
+  emit(const PropertyState.loading());
+  try {
+    final token = await _getToken();
+
+    final result = await _api.getPropertiesByLocation(
+      provinsi: provinsi,
+      kabupaten: kabupaten,
+      kecamatan: kecamatan,
+      kelurahan: kelurahan,
+      token: 'Bearer $token',
+    );
+
+    emit(PropertyState.success(result));
+  } catch (e) {
+    debugPrint('❌ Error fetchByLocation: $e');
+    emit(PropertyState.error("Gagal ambil properti berdasarkan lokasi: ${e.toString()}"));
+  }
+}
+
 }

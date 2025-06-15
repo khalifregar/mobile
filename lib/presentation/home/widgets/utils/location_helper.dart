@@ -4,7 +4,6 @@ import 'package:geolocator/geolocator.dart';
 class LocationHelper {
   static Future<String?> getCityFromLocation() async {
     try {
-      // Pastikan permission aktif
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -14,12 +13,10 @@ class LocationHelper {
         }
       }
 
-      // Ambil posisi saat ini
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
 
-      // Reverse geocode → dapatkan city/kota
       final placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,

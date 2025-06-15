@@ -13,7 +13,10 @@ _$CreatePropertyRequestImpl _$$CreatePropertyRequestImplFromJson(
       deskripsi: json['deskripsi'] as String,
       tipeRumah: json['tipeRumah'] as String,
       harga: (json['harga'] as num?)?.toInt(),
-      lokasi: json['lokasi'] as String,
+      provinsi: json['provinsi'] as String,
+      kabupaten: json['kabupaten'] as String,
+      kecamatan: json['kecamatan'] as String,
+      kelurahan: json['kelurahan'] as String,
     );
 
 Map<String, dynamic> _$$CreatePropertyRequestImplToJson(
@@ -23,7 +26,10 @@ Map<String, dynamic> _$$CreatePropertyRequestImplToJson(
       'deskripsi': instance.deskripsi,
       'tipeRumah': instance.tipeRumah,
       'harga': instance.harga,
-      'lokasi': instance.lokasi,
+      'provinsi': instance.provinsi,
+      'kabupaten': instance.kabupaten,
+      'kecamatan': instance.kecamatan,
+      'kelurahan': instance.kelurahan,
     };
 
 _$UpdatePropertyRequestImpl _$$UpdatePropertyRequestImplFromJson(
@@ -33,7 +39,10 @@ _$UpdatePropertyRequestImpl _$$UpdatePropertyRequestImplFromJson(
       deskripsi: json['deskripsi'] as String?,
       tipeRumah: json['tipeRumah'] as String?,
       harga: (json['harga'] as num?)?.toInt(),
-      lokasi: json['lokasi'] as String?,
+      provinsi: json['provinsi'] as String?,
+      kabupaten: json['kabupaten'] as String?,
+      kecamatan: json['kecamatan'] as String?,
+      kelurahan: json['kelurahan'] as String?,
       isAvailable: json['isAvailable'] as bool?,
     );
 
@@ -44,6 +53,9 @@ Map<String, dynamic> _$$UpdatePropertyRequestImplToJson(
       'deskripsi': instance.deskripsi,
       'tipeRumah': instance.tipeRumah,
       'harga': instance.harga,
-      'lokasi': instance.lokasi,
+      'provinsi': instance.provinsi,
+      'kabupaten': instance.kabupaten,
+      'kecamatan': instance.kecamatan,
+      'kelurahan': instance.kelurahan,
       'isAvailable': instance.isAvailable,
     };

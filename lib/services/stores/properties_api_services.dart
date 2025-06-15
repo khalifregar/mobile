@@ -52,11 +52,21 @@ abstract class PropertiesApiService {
 
   @GET('/api/pembeli/properties')
   Future<List<PropertyDto>> getBuyerProperties(
-    @Header('Authorization') String token, // ✅ Tambahan untuk token
+    @Header('Authorization') String token,
   );
 
   @GET('/api/pembeli/properties/property/{propertyId}')
   Future<PropertyDto> getBuyerPropertyDetail(
     @Path('propertyId') String propertyId,
   );
+
+  /// ✅ NEW: Filter properti berdasarkan lokasi (bebas query kombinasi)
+  @GET('/api/lokasi/properties')
+  Future<List<PropertyDto>> getPropertiesByLocation({
+    @Query('provinsi') String? provinsi,
+    @Query('kabupaten') String? kabupaten,
+    @Query('kecamatan') String? kecamatan,
+    @Query('kelurahan') String? kelurahan,
+    @Header('Authorization') required String token,
+  });
 }

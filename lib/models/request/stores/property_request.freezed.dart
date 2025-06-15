@@ -28,9 +28,15 @@ mixin _$CreatePropertyRequest {
   @JsonKey(name: 'tipeRumah')
   String get tipeRumah => throw _privateConstructorUsedError;
   @JsonKey(name: 'harga')
-  int? get harga => throw _privateConstructorUsedError;
-  @JsonKey(name: 'lokasi')
-  String get lokasi => throw _privateConstructorUsedError;
+  int? get harga => throw _privateConstructorUsedError; // ✅ Lokasi terpisah
+  @JsonKey(name: 'provinsi')
+  String get provinsi => throw _privateConstructorUsedError;
+  @JsonKey(name: 'kabupaten')
+  String get kabupaten => throw _privateConstructorUsedError;
+  @JsonKey(name: 'kecamatan')
+  String get kecamatan => throw _privateConstructorUsedError;
+  @JsonKey(name: 'kelurahan')
+  String get kelurahan => throw _privateConstructorUsedError;
 
   /// Serializes this CreatePropertyRequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,7 +59,10 @@ abstract class $CreatePropertyRequestCopyWith<$Res> {
       @JsonKey(name: 'deskripsi') String deskripsi,
       @JsonKey(name: 'tipeRumah') String tipeRumah,
       @JsonKey(name: 'harga') int? harga,
-      @JsonKey(name: 'lokasi') String lokasi});
+      @JsonKey(name: 'provinsi') String provinsi,
+      @JsonKey(name: 'kabupaten') String kabupaten,
+      @JsonKey(name: 'kecamatan') String kecamatan,
+      @JsonKey(name: 'kelurahan') String kelurahan});
 }
 
 /// @nodoc
@@ -76,7 +85,10 @@ class _$CreatePropertyRequestCopyWithImpl<$Res,
     Object? deskripsi = null,
     Object? tipeRumah = null,
     Object? harga = freezed,
-    Object? lokasi = null,
+    Object? provinsi = null,
+    Object? kabupaten = null,
+    Object? kecamatan = null,
+    Object? kelurahan = null,
   }) {
     return _then(_value.copyWith(
       namaRumah: null == namaRumah
@@ -95,9 +107,21 @@ class _$CreatePropertyRequestCopyWithImpl<$Res,
           ? _value.harga
           : harga // ignore: cast_nullable_to_non_nullable
               as int?,
-      lokasi: null == lokasi
-          ? _value.lokasi
-          : lokasi // ignore: cast_nullable_to_non_nullable
+      provinsi: null == provinsi
+          ? _value.provinsi
+          : provinsi // ignore: cast_nullable_to_non_nullable
+              as String,
+      kabupaten: null == kabupaten
+          ? _value.kabupaten
+          : kabupaten // ignore: cast_nullable_to_non_nullable
+              as String,
+      kecamatan: null == kecamatan
+          ? _value.kecamatan
+          : kecamatan // ignore: cast_nullable_to_non_nullable
+              as String,
+      kelurahan: null == kelurahan
+          ? _value.kelurahan
+          : kelurahan // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -117,7 +141,10 @@ abstract class _$$CreatePropertyRequestImplCopyWith<$Res>
       @JsonKey(name: 'deskripsi') String deskripsi,
       @JsonKey(name: 'tipeRumah') String tipeRumah,
       @JsonKey(name: 'harga') int? harga,
-      @JsonKey(name: 'lokasi') String lokasi});
+      @JsonKey(name: 'provinsi') String provinsi,
+      @JsonKey(name: 'kabupaten') String kabupaten,
+      @JsonKey(name: 'kecamatan') String kecamatan,
+      @JsonKey(name: 'kelurahan') String kelurahan});
 }
 
 /// @nodoc
@@ -138,7 +165,10 @@ class __$$CreatePropertyRequestImplCopyWithImpl<$Res>
     Object? deskripsi = null,
     Object? tipeRumah = null,
     Object? harga = freezed,
-    Object? lokasi = null,
+    Object? provinsi = null,
+    Object? kabupaten = null,
+    Object? kecamatan = null,
+    Object? kelurahan = null,
   }) {
     return _then(_$CreatePropertyRequestImpl(
       namaRumah: null == namaRumah
@@ -157,9 +187,21 @@ class __$$CreatePropertyRequestImplCopyWithImpl<$Res>
           ? _value.harga
           : harga // ignore: cast_nullable_to_non_nullable
               as int?,
-      lokasi: null == lokasi
-          ? _value.lokasi
-          : lokasi // ignore: cast_nullable_to_non_nullable
+      provinsi: null == provinsi
+          ? _value.provinsi
+          : provinsi // ignore: cast_nullable_to_non_nullable
+              as String,
+      kabupaten: null == kabupaten
+          ? _value.kabupaten
+          : kabupaten // ignore: cast_nullable_to_non_nullable
+              as String,
+      kecamatan: null == kecamatan
+          ? _value.kecamatan
+          : kecamatan // ignore: cast_nullable_to_non_nullable
+              as String,
+      kelurahan: null == kelurahan
+          ? _value.kelurahan
+          : kelurahan // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -173,7 +215,10 @@ class _$CreatePropertyRequestImpl implements _CreatePropertyRequest {
       @JsonKey(name: 'deskripsi') required this.deskripsi,
       @JsonKey(name: 'tipeRumah') required this.tipeRumah,
       @JsonKey(name: 'harga') this.harga,
-      @JsonKey(name: 'lokasi') required this.lokasi});
+      @JsonKey(name: 'provinsi') required this.provinsi,
+      @JsonKey(name: 'kabupaten') required this.kabupaten,
+      @JsonKey(name: 'kecamatan') required this.kecamatan,
+      @JsonKey(name: 'kelurahan') required this.kelurahan});
 
   factory _$CreatePropertyRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$CreatePropertyRequestImplFromJson(json);
@@ -190,13 +235,23 @@ class _$CreatePropertyRequestImpl implements _CreatePropertyRequest {
   @override
   @JsonKey(name: 'harga')
   final int? harga;
+// ✅ Lokasi terpisah
   @override
-  @JsonKey(name: 'lokasi')
-  final String lokasi;
+  @JsonKey(name: 'provinsi')
+  final String provinsi;
+  @override
+  @JsonKey(name: 'kabupaten')
+  final String kabupaten;
+  @override
+  @JsonKey(name: 'kecamatan')
+  final String kecamatan;
+  @override
+  @JsonKey(name: 'kelurahan')
+  final String kelurahan;
 
   @override
   String toString() {
-    return 'CreatePropertyRequest(namaRumah: $namaRumah, deskripsi: $deskripsi, tipeRumah: $tipeRumah, harga: $harga, lokasi: $lokasi)';
+    return 'CreatePropertyRequest(namaRumah: $namaRumah, deskripsi: $deskripsi, tipeRumah: $tipeRumah, harga: $harga, provinsi: $provinsi, kabupaten: $kabupaten, kecamatan: $kecamatan, kelurahan: $kelurahan)';
   }
 
   @override
@@ -211,13 +266,20 @@ class _$CreatePropertyRequestImpl implements _CreatePropertyRequest {
             (identical(other.tipeRumah, tipeRumah) ||
                 other.tipeRumah == tipeRumah) &&
             (identical(other.harga, harga) || other.harga == harga) &&
-            (identical(other.lokasi, lokasi) || other.lokasi == lokasi));
+            (identical(other.provinsi, provinsi) ||
+                other.provinsi == provinsi) &&
+            (identical(other.kabupaten, kabupaten) ||
+                other.kabupaten == kabupaten) &&
+            (identical(other.kecamatan, kecamatan) ||
+                other.kecamatan == kecamatan) &&
+            (identical(other.kelurahan, kelurahan) ||
+                other.kelurahan == kelurahan));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, namaRumah, deskripsi, tipeRumah, harga, lokasi);
+  int get hashCode => Object.hash(runtimeType, namaRumah, deskripsi, tipeRumah,
+      harga, provinsi, kabupaten, kecamatan, kelurahan);
 
   /// Create a copy of CreatePropertyRequest
   /// with the given fields replaced by the non-null parameter values.
@@ -242,7 +304,10 @@ abstract class _CreatePropertyRequest implements CreatePropertyRequest {
           @JsonKey(name: 'deskripsi') required final String deskripsi,
           @JsonKey(name: 'tipeRumah') required final String tipeRumah,
           @JsonKey(name: 'harga') final int? harga,
-          @JsonKey(name: 'lokasi') required final String lokasi}) =
+          @JsonKey(name: 'provinsi') required final String provinsi,
+          @JsonKey(name: 'kabupaten') required final String kabupaten,
+          @JsonKey(name: 'kecamatan') required final String kecamatan,
+          @JsonKey(name: 'kelurahan') required final String kelurahan}) =
       _$CreatePropertyRequestImpl;
 
   factory _CreatePropertyRequest.fromJson(Map<String, dynamic> json) =
@@ -259,10 +324,19 @@ abstract class _CreatePropertyRequest implements CreatePropertyRequest {
   String get tipeRumah;
   @override
   @JsonKey(name: 'harga')
-  int? get harga;
+  int? get harga; // ✅ Lokasi terpisah
   @override
-  @JsonKey(name: 'lokasi')
-  String get lokasi;
+  @JsonKey(name: 'provinsi')
+  String get provinsi;
+  @override
+  @JsonKey(name: 'kabupaten')
+  String get kabupaten;
+  @override
+  @JsonKey(name: 'kecamatan')
+  String get kecamatan;
+  @override
+  @JsonKey(name: 'kelurahan')
+  String get kelurahan;
 
   /// Create a copy of CreatePropertyRequest
   /// with the given fields replaced by the non-null parameter values.
@@ -286,9 +360,15 @@ mixin _$UpdatePropertyRequest {
   @JsonKey(name: 'tipeRumah')
   String? get tipeRumah => throw _privateConstructorUsedError;
   @JsonKey(name: 'harga')
-  int? get harga => throw _privateConstructorUsedError;
-  @JsonKey(name: 'lokasi')
-  String? get lokasi => throw _privateConstructorUsedError;
+  int? get harga => throw _privateConstructorUsedError; // ✅ Lokasi terpisah
+  @JsonKey(name: 'provinsi')
+  String? get provinsi => throw _privateConstructorUsedError;
+  @JsonKey(name: 'kabupaten')
+  String? get kabupaten => throw _privateConstructorUsedError;
+  @JsonKey(name: 'kecamatan')
+  String? get kecamatan => throw _privateConstructorUsedError;
+  @JsonKey(name: 'kelurahan')
+  String? get kelurahan => throw _privateConstructorUsedError;
   @JsonKey(name: 'isAvailable')
   bool? get isAvailable => throw _privateConstructorUsedError;
 
@@ -313,7 +393,10 @@ abstract class $UpdatePropertyRequestCopyWith<$Res> {
       @JsonKey(name: 'deskripsi') String? deskripsi,
       @JsonKey(name: 'tipeRumah') String? tipeRumah,
       @JsonKey(name: 'harga') int? harga,
-      @JsonKey(name: 'lokasi') String? lokasi,
+      @JsonKey(name: 'provinsi') String? provinsi,
+      @JsonKey(name: 'kabupaten') String? kabupaten,
+      @JsonKey(name: 'kecamatan') String? kecamatan,
+      @JsonKey(name: 'kelurahan') String? kelurahan,
       @JsonKey(name: 'isAvailable') bool? isAvailable});
 }
 
@@ -337,7 +420,10 @@ class _$UpdatePropertyRequestCopyWithImpl<$Res,
     Object? deskripsi = freezed,
     Object? tipeRumah = freezed,
     Object? harga = freezed,
-    Object? lokasi = freezed,
+    Object? provinsi = freezed,
+    Object? kabupaten = freezed,
+    Object? kecamatan = freezed,
+    Object? kelurahan = freezed,
     Object? isAvailable = freezed,
   }) {
     return _then(_value.copyWith(
@@ -357,9 +443,21 @@ class _$UpdatePropertyRequestCopyWithImpl<$Res,
           ? _value.harga
           : harga // ignore: cast_nullable_to_non_nullable
               as int?,
-      lokasi: freezed == lokasi
-          ? _value.lokasi
-          : lokasi // ignore: cast_nullable_to_non_nullable
+      provinsi: freezed == provinsi
+          ? _value.provinsi
+          : provinsi // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kabupaten: freezed == kabupaten
+          ? _value.kabupaten
+          : kabupaten // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kecamatan: freezed == kecamatan
+          ? _value.kecamatan
+          : kecamatan // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kelurahan: freezed == kelurahan
+          ? _value.kelurahan
+          : kelurahan // ignore: cast_nullable_to_non_nullable
               as String?,
       isAvailable: freezed == isAvailable
           ? _value.isAvailable
@@ -383,7 +481,10 @@ abstract class _$$UpdatePropertyRequestImplCopyWith<$Res>
       @JsonKey(name: 'deskripsi') String? deskripsi,
       @JsonKey(name: 'tipeRumah') String? tipeRumah,
       @JsonKey(name: 'harga') int? harga,
-      @JsonKey(name: 'lokasi') String? lokasi,
+      @JsonKey(name: 'provinsi') String? provinsi,
+      @JsonKey(name: 'kabupaten') String? kabupaten,
+      @JsonKey(name: 'kecamatan') String? kecamatan,
+      @JsonKey(name: 'kelurahan') String? kelurahan,
       @JsonKey(name: 'isAvailable') bool? isAvailable});
 }
 
@@ -405,7 +506,10 @@ class __$$UpdatePropertyRequestImplCopyWithImpl<$Res>
     Object? deskripsi = freezed,
     Object? tipeRumah = freezed,
     Object? harga = freezed,
-    Object? lokasi = freezed,
+    Object? provinsi = freezed,
+    Object? kabupaten = freezed,
+    Object? kecamatan = freezed,
+    Object? kelurahan = freezed,
     Object? isAvailable = freezed,
   }) {
     return _then(_$UpdatePropertyRequestImpl(
@@ -425,9 +529,21 @@ class __$$UpdatePropertyRequestImplCopyWithImpl<$Res>
           ? _value.harga
           : harga // ignore: cast_nullable_to_non_nullable
               as int?,
-      lokasi: freezed == lokasi
-          ? _value.lokasi
-          : lokasi // ignore: cast_nullable_to_non_nullable
+      provinsi: freezed == provinsi
+          ? _value.provinsi
+          : provinsi // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kabupaten: freezed == kabupaten
+          ? _value.kabupaten
+          : kabupaten // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kecamatan: freezed == kecamatan
+          ? _value.kecamatan
+          : kecamatan // ignore: cast_nullable_to_non_nullable
+              as String?,
+      kelurahan: freezed == kelurahan
+          ? _value.kelurahan
+          : kelurahan // ignore: cast_nullable_to_non_nullable
               as String?,
       isAvailable: freezed == isAvailable
           ? _value.isAvailable
@@ -445,7 +561,10 @@ class _$UpdatePropertyRequestImpl implements _UpdatePropertyRequest {
       @JsonKey(name: 'deskripsi') this.deskripsi,
       @JsonKey(name: 'tipeRumah') this.tipeRumah,
       @JsonKey(name: 'harga') this.harga,
-      @JsonKey(name: 'lokasi') this.lokasi,
+      @JsonKey(name: 'provinsi') this.provinsi,
+      @JsonKey(name: 'kabupaten') this.kabupaten,
+      @JsonKey(name: 'kecamatan') this.kecamatan,
+      @JsonKey(name: 'kelurahan') this.kelurahan,
       @JsonKey(name: 'isAvailable') this.isAvailable});
 
   factory _$UpdatePropertyRequestImpl.fromJson(Map<String, dynamic> json) =>
@@ -463,16 +582,26 @@ class _$UpdatePropertyRequestImpl implements _UpdatePropertyRequest {
   @override
   @JsonKey(name: 'harga')
   final int? harga;
+// ✅ Lokasi terpisah
   @override
-  @JsonKey(name: 'lokasi')
-  final String? lokasi;
+  @JsonKey(name: 'provinsi')
+  final String? provinsi;
+  @override
+  @JsonKey(name: 'kabupaten')
+  final String? kabupaten;
+  @override
+  @JsonKey(name: 'kecamatan')
+  final String? kecamatan;
+  @override
+  @JsonKey(name: 'kelurahan')
+  final String? kelurahan;
   @override
   @JsonKey(name: 'isAvailable')
   final bool? isAvailable;
 
   @override
   String toString() {
-    return 'UpdatePropertyRequest(namaRumah: $namaRumah, deskripsi: $deskripsi, tipeRumah: $tipeRumah, harga: $harga, lokasi: $lokasi, isAvailable: $isAvailable)';
+    return 'UpdatePropertyRequest(namaRumah: $namaRumah, deskripsi: $deskripsi, tipeRumah: $tipeRumah, harga: $harga, provinsi: $provinsi, kabupaten: $kabupaten, kecamatan: $kecamatan, kelurahan: $kelurahan, isAvailable: $isAvailable)';
   }
 
   @override
@@ -487,15 +616,22 @@ class _$UpdatePropertyRequestImpl implements _UpdatePropertyRequest {
             (identical(other.tipeRumah, tipeRumah) ||
                 other.tipeRumah == tipeRumah) &&
             (identical(other.harga, harga) || other.harga == harga) &&
-            (identical(other.lokasi, lokasi) || other.lokasi == lokasi) &&
+            (identical(other.provinsi, provinsi) ||
+                other.provinsi == provinsi) &&
+            (identical(other.kabupaten, kabupaten) ||
+                other.kabupaten == kabupaten) &&
+            (identical(other.kecamatan, kecamatan) ||
+                other.kecamatan == kecamatan) &&
+            (identical(other.kelurahan, kelurahan) ||
+                other.kelurahan == kelurahan) &&
             (identical(other.isAvailable, isAvailable) ||
                 other.isAvailable == isAvailable));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, namaRumah, deskripsi, tipeRumah, harga, lokasi, isAvailable);
+  int get hashCode => Object.hash(runtimeType, namaRumah, deskripsi, tipeRumah,
+      harga, provinsi, kabupaten, kecamatan, kelurahan, isAvailable);
 
   /// Create a copy of UpdatePropertyRequest
   /// with the given fields replaced by the non-null parameter values.
@@ -520,7 +656,10 @@ abstract class _UpdatePropertyRequest implements UpdatePropertyRequest {
           @JsonKey(name: 'deskripsi') final String? deskripsi,
           @JsonKey(name: 'tipeRumah') final String? tipeRumah,
           @JsonKey(name: 'harga') final int? harga,
-          @JsonKey(name: 'lokasi') final String? lokasi,
+          @JsonKey(name: 'provinsi') final String? provinsi,
+          @JsonKey(name: 'kabupaten') final String? kabupaten,
+          @JsonKey(name: 'kecamatan') final String? kecamatan,
+          @JsonKey(name: 'kelurahan') final String? kelurahan,
           @JsonKey(name: 'isAvailable') final bool? isAvailable}) =
       _$UpdatePropertyRequestImpl;
 
@@ -538,10 +677,19 @@ abstract class _UpdatePropertyRequest implements UpdatePropertyRequest {
   String? get tipeRumah;
   @override
   @JsonKey(name: 'harga')
-  int? get harga;
+  int? get harga; // ✅ Lokasi terpisah
   @override
-  @JsonKey(name: 'lokasi')
-  String? get lokasi;
+  @JsonKey(name: 'provinsi')
+  String? get provinsi;
+  @override
+  @JsonKey(name: 'kabupaten')
+  String? get kabupaten;
+  @override
+  @JsonKey(name: 'kecamatan')
+  String? get kecamatan;
+  @override
+  @JsonKey(name: 'kelurahan')
+  String? get kelurahan;
   @override
   @JsonKey(name: 'isAvailable')
   bool? get isAvailable;

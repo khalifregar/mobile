@@ -51,6 +51,8 @@ dependencies:
   geolocator: ^11.0.0
   geocoding: ^4.0.0
   string_similarity: ^2.1.1
+  flutter_local_notifications: ^17.0.0
+  permission_handler: ^11.0.1 # atau versi terbaru
 
 dev_dependencies:
   flutter_test:

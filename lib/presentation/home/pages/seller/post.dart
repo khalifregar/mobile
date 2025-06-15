@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:propedia/presentation/home/widgets/services/notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:propedia/presentation/home/cubit/property_cubit.dart';
 import 'package:propedia/presentation/home/cubit/property_state.dart';
@@ -24,7 +25,10 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
   final TextEditingController _hargaController = TextEditingController();
   final TextEditingController _tipeRumahController = TextEditingController();
   final TextEditingController _deskripsiController = TextEditingController();
-  final TextEditingController _lokasiController = TextEditingController();
+  final TextEditingController _provinsiController = TextEditingController();
+  final TextEditingController _kabupatenController = TextEditingController();
+  final TextEditingController _kecamatanController = TextEditingController();
+  final TextEditingController _kelurahanController = TextEditingController();
 
   List<String> _houseTypes = [];
   bool _loadingTypes = true;
@@ -47,7 +51,10 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
       _hargaController.text = (editing.harga ?? 0).toString();
       _tipeRumahController.text = editing.tipeRumah ?? '';
       _deskripsiController.text = editing.deskripsi ?? '';
-      _lokasiController.text = editing.lokasi ?? '';
+      _provinsiController.text = editing.provinsi ?? '';
+      _kabupatenController.text = editing.kabupaten ?? '';
+      _kecamatanController.text = editing.kecamatan ?? '';
+      _kelurahanController.text = editing.kelurahan ?? '';
     }
   }
 
@@ -70,69 +77,92 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) => Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 20.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Pilih Tipe Rumah',
-                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: darkText),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.close, size: 24.w, color: Colors.grey),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
+      builder:
+          (_) => Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
             ),
-            Divider(height: 1.h, thickness: 1.h, color: Colors.grey.shade200),
-            if (_loadingTypes)
-              Padding(
-                padding: EdgeInsets.all(20.h),
-                child: const CircularProgressIndicator(),
-              )
-            else
-              Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: _houseTypes.length,
-                  itemBuilder: (_, index) {
-                    final type = _houseTypes[index];
-                    return ListTile(
-                      title: Text(
-                        type,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 15.h,
+                    horizontal: 20.w,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Pilih Tipe Rumah',
                         style: TextStyle(
-                          fontSize: 16.sp,
-                          color: _tipeRumahController.text == type ? primaryOrange : darkText,
-                          fontWeight: _tipeRumahController.text == type ? FontWeight.bold : FontWeight.normal,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: darkText,
                         ),
                       ),
-                      trailing: _tipeRumahController.text == type
-                          ? Icon(Icons.check, color: primaryOrange, size: 20.w)
-                          : null,
-                      onTap: () {
-                        setState(() {
-                          _tipeRumahController.text = type;
-                        });
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
+                      IconButton(
+                        icon: Icon(Icons.close, size: 24.w, color: Colors.grey),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom + 10.h),
-          ],
-        ),
-      ),
+                Divider(
+                  height: 1.h,
+                  thickness: 1.h,
+                  color: Colors.grey.shade200,
+                ),
+                if (_loadingTypes)
+                  Padding(
+                    padding: EdgeInsets.all(20.h),
+                    child: const CircularProgressIndicator(),
+                  )
+                else
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _houseTypes.length,
+                      itemBuilder: (_, index) {
+                        final type = _houseTypes[index];
+                        return ListTile(
+                          title: Text(
+                            type,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color:
+                                  _tipeRumahController.text == type
+                                      ? primaryOrange
+                                      : darkText,
+                              fontWeight:
+                                  _tipeRumahController.text == type
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                            ),
+                          ),
+                          trailing:
+                              _tipeRumahController.text == type
+                                  ? Icon(
+                                    Icons.check,
+                                    color: primaryOrange,
+                                    size: 20.w,
+                                  )
+                                  : null,
+                          onTap: () {
+                            setState(() {
+                              _tipeRumahController.text = type;
+                            });
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                SizedBox(height: MediaQuery.of(context).padding.bottom + 10.h),
+              ],
+            ),
+          ),
     );
   }
 
@@ -141,13 +171,19 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
     final hargaText = _hargaController.text.trim();
     final tipeRumah = _tipeRumahController.text.trim();
     final deskripsi = _deskripsiController.text.trim();
-    final lokasi = _lokasiController.text.trim();
+    final provinsi = _provinsiController.text.trim();
+    final kabupaten = _kabupatenController.text.trim();
+    final kecamatan = _kecamatanController.text.trim();
+    final kelurahan = _kelurahanController.text.trim();
 
     if (namaRumah.isEmpty ||
         hargaText.isEmpty ||
         tipeRumah.isEmpty ||
         deskripsi.isEmpty ||
-        lokasi.isEmpty) {
+        provinsi.isEmpty ||
+        kabupaten.isEmpty ||
+        kecamatan.isEmpty ||
+        kelurahan.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Semua field harus diisi.'),
@@ -168,37 +204,39 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
       return;
     }
 
-    final request = UpdatePropertyRequest(
-      namaRumah: namaRumah,
-      harga: harga,
-      tipeRumah: tipeRumah,
-      deskripsi: deskripsi,
-      lokasi: lokasi,
-    );
-
     final cubit = context.read<PropertyCubit>();
 
     if (isEditMode && editingId != null) {
-      await cubit.update('penjual', editingId!, request);
+      await cubit.update(
+        'penjual',
+        editingId!,
+        UpdatePropertyRequest(
+          namaRumah: namaRumah,
+          harga: harga,
+          tipeRumah: tipeRumah,
+          deskripsi: deskripsi,
+          provinsi: provinsi,
+          kabupaten: kabupaten,
+          kecamatan: kecamatan,
+          kelurahan: kelurahan,
+        ),
+      );
       cubit.clearEditing();
     } else {
-      final createRequest = CreatePropertyRequest(
-        namaRumah: namaRumah,
-        harga: harga,
-        tipeRumah: tipeRumah,
-        deskripsi: deskripsi,
-        lokasi: lokasi,
+      await cubit.create(
+        'penjual',
+        CreatePropertyRequest(
+          namaRumah: namaRumah,
+          harga: harga,
+          tipeRumah: tipeRumah,
+          deskripsi: deskripsi,
+          provinsi: provinsi,
+          kabupaten: kabupaten,
+          kecamatan: kecamatan,
+          kelurahan: kelurahan,
+        ),
       );
-      await cubit.create('penjual', createRequest);
     }
-  }
-
-  void _resetForm() {
-    _namaRumahController.clear();
-    _hargaController.clear();
-    _tipeRumahController.clear();
-    _deskripsiController.clear();
-    _lokasiController.clear();
   }
 
   @override
@@ -208,19 +246,33 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
         state.whenOrNull(
           created: (_) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Berhasil menambahkan properti.'), backgroundColor: primaryOrange),
+              SnackBar(
+                content: Text('Berhasil menambahkan properti.'),
+                backgroundColor: primaryOrange,
+              ),
             );
-            _resetForm();
+
+            NotificationService.showNotification(
+              title: 'Properti Ditambahkan',
+              body: 'Properti baru berhasil diposting!',
+            );
           },
+
           updated: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Berhasil mengubah properti.'), backgroundColor: primaryOrange),
+              SnackBar(
+                content: Text('Berhasil mengubah properti.'),
+                backgroundColor: primaryOrange,
+              ),
             );
             Navigator.pop(context);
           },
           error: (msg) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Gagal: $msg'), backgroundColor: Colors.red),
+              SnackBar(
+                content: Text('Gagal: $msg'),
+                backgroundColor: Colors.red,
+              ),
             );
           },
         );
@@ -232,7 +284,11 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
             SliverAppBar(
               title: Text(
                 isEditMode ? 'Edit Properti' : 'Buat Postingan Baru',
-                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold, color: darkText),
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  color: darkText,
+                ),
               ),
               centerTitle: true,
               backgroundColor: Colors.white,
@@ -250,27 +306,58 @@ class _PostPenjualanPageState extends State<PostPenjualanPage> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Detail Properti',
-                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: darkText),
+                    CustomTextField(
+                      label: 'Nama Rumah',
+                      controller: _namaRumahController,
+                      hint: '',
                     ),
                     SizedBox(height: 15.h),
-                    CustomTextField(label: 'Nama Rumah', controller: _namaRumahController, hint: '',),
-                    SizedBox(height: 20.h),
-                    CustomTextField(label: 'Harga (Rp)', controller: _hargaController, keyboardType: TextInputType.number, hint: '',),
-                    SizedBox(height: 20.h),
+                    CustomTextField(
+                      label: 'Harga',
+                      controller: _hargaController,
+                      keyboardType: TextInputType.number,
+                      hint: '',
+                    ),
+                    SizedBox(height: 15.h),
                     CustomTextField(
                       label: 'Tipe Rumah',
                       controller: _tipeRumahController,
                       readOnly: true,
-                      onTap: _showHouseTypeBottomSheet, hint: '',
+                      onTap: _showHouseTypeBottomSheet,
+                      hint: '',
                     ),
-                    SizedBox(height: 20.h),
-                    CustomTextField(label: 'Deskripsi', controller: _deskripsiController, maxLines: 5, hint: '',),
-                    SizedBox(height: 20.h),
-                    CustomTextField(label: 'Lokasi', controller: _lokasiController, hint: '',),
+                    SizedBox(height: 15.h),
+                    CustomTextField(
+                      label: 'Deskripsi',
+                      controller: _deskripsiController,
+                      maxLines: 3,
+                      hint: '',
+                    ),
+                    SizedBox(height: 15.h),
+                    CustomTextField(
+                      label: 'Provinsi',
+                      controller: _provinsiController,
+                      hint: '',
+                    ),
+                    SizedBox(height: 15.h),
+                    CustomTextField(
+                      label: 'Kabupaten/Kota',
+                      controller: _kabupatenController,
+                      hint: '',
+                    ),
+                    SizedBox(height: 15.h),
+                    CustomTextField(
+                      label: 'Kecamatan',
+                      controller: _kecamatanController,
+                      hint: '',
+                    ),
+                    SizedBox(height: 15.h),
+                    CustomTextField(
+                      label: 'Kelurahan',
+                      controller: _kelurahanController,
+                      hint: '',
+                    ),
                     SizedBox(height: 30.h),
                   ],
                 ),
